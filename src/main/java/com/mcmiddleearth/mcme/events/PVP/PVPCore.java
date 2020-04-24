@@ -29,20 +29,13 @@ import com.mcmiddleearth.mcme.events.PVP.Handlers.ChatHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.GearHandler.GearEvents;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.JoinLeaveHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.WeatherHandler;
-import com.mcmiddleearth.mcme.events.PVP.Servlet.PVPServer;
-import com.mcmiddleearth.mcme.events.PVP.Team.Teams;
 import com.mcmiddleearth.mcme.events.Util.CLog;
 import com.mcmiddleearth.mcme.events.Util.DBmanager;
-import com.mcmiddleearth.mcme.events.summerevent.SummerCore;
-import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lombok.Getter;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.plugin.Plugin;
@@ -53,8 +46,6 @@ import org.bukkit.plugin.PluginManager;
  * @author Donovan <dallen@dallen.xyz>
  */
 public class PVPCore implements Event{
-    
-    PVPServer server;
     
     @Getter
     private static File saveLoc = new File(Main.getPluginDirectory() + Main.getFileSep() + "PVP");
@@ -116,13 +107,6 @@ public class PVPCore implements Event{
         pm.registerEvents(new WeatherHandler(), Main.getPlugin());
         BukkitTeamHandler.configureBukkitTeams();
         
-        try {
-            server = new PVPServer(3333);
-            server.getServ().start();
-        } 
-        catch (Exception ex) {
-            Logger.getLogger(SummerCore.class.getName()).log(Level.SEVERE, null, ex);
-        }
         Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable(){
 
             @Override
@@ -141,13 +125,8 @@ public class PVPCore implements Event{
             m.setCurr(0);
             DBmanager.saveObj(m, new File(saveLoc + Main.getFileSep() + "Maps"), mn);
         }
-        try {
-            server.getServ().stop();
-        } 
-        catch (Exception ex) {
-            Logger.getLogger(SummerCore.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
+    
     public static WorldEditPlugin getWorldEditPlugin(){
         Plugin p = Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
         

@@ -242,8 +242,7 @@ public class Siege extends BasePluginGamemode{
                                 if(!Team.getRed().getCapturedPoints().contains(e.getClickedBlock().getLocation())){
                                     Team.getRed().getCapturedPoints().add(e.getClickedBlock().getLocation());
                                     Block b = e.getClickedBlock().getLocation().add(0, 1, 0).getBlock();
-                                    b.setType(Material.STAINED_GLASS);
-                                    b.setData((byte) 14);
+                                    b.setType(Material.RED_STAINED_GLASS);
                                     for(Player pl : getPlayers()){
                                         pl.sendMessage(ChatColor.RED + "Red Team captured a point!");
                                     }
@@ -275,8 +274,7 @@ public class Siege extends BasePluginGamemode{
                                 if(!Team.getBlue().getCapturedPoints().contains(e.getClickedBlock().getLocation())){
                                     Team.getBlue().getCapturedPoints().add(e.getClickedBlock().getLocation());
                                     Block b = e.getClickedBlock().getLocation().add(0, 1, 0).getBlock();
-                                    b.setType(Material.STAINED_GLASS);
-                                    b.setData((byte) 11);
+                                    b.setType(Material.BLUE_STAINED_GLASS);
                                     for(Player pl : getPlayers()){
                                         pl.sendMessage(ChatColor.BLUE + "Blue Team captured a point!");
                                     }

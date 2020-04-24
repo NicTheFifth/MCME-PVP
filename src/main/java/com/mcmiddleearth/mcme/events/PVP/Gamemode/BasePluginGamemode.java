@@ -29,17 +29,13 @@ import com.mcmiddleearth.mcme.events.PVP.PVPCore;
 import com.mcmiddleearth.mcme.events.PVP.PlayerStat;
 import com.mcmiddleearth.mcme.events.PVP.Team;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
@@ -71,7 +67,7 @@ public abstract class BasePluginGamemode implements Gamemode{
         for(Player p : players){
             PlayerStat.getPlayerStats().get(p.getName()).addPlayedGame();
         }
-        if(m.getResourcePackURL() != null){
+        /*if(m.getResourcePackURL() != null){
             for(Player p : Bukkit.getOnlinePlayers()){
                 if(!players.contains(p)){
                     try{
@@ -82,7 +78,7 @@ public abstract class BasePluginGamemode implements Gamemode{
                     }
                 }
             }
-        }
+        }*/
         
     };
     
@@ -91,13 +87,13 @@ public abstract class BasePluginGamemode implements Gamemode{
         PVPCommandCore.setRunningGame(null);
         PVPCommandCore.toggleVoxel(false);
         
-        for(Player p : Bukkit.getOnlinePlayers()){
+        /*for(Player p : Bukkit.getOnlinePlayers()){
             p.setResourcePack("http://www.mcmiddleearth.com/content/Eriador.zip");
-        }
+        }*/
         
         Team.resetAllTeams();
         
-        Bukkit.getScheduler().cancelAllTasks();
+        Bukkit.getScheduler().cancelTasks(Main.getPlugin());
         for(Objective o : scoreboard.getObjectives()){
             o.unregister();
         }

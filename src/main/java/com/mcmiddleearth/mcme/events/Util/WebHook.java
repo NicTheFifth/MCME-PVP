@@ -32,7 +32,7 @@ public class WebHook {
     
     private final String updateURL = "https://github.com/DonoA/MCME-Events/raw/master/Compiled/MCME-Events-0.1.jar";
     
-    public void update(CommandSender sender)
+    /*public void update(CommandSender sender)
     {
 	final BukkitScheduler bs = Main.getPlugin().getServer().getScheduler();
 	final String pn = sender instanceof Player ? ((Player)sender).getName() : null;
@@ -164,5 +164,5 @@ public class WebHook {
 		printStackTraceSync(t, false);
 	  }
 	}
-  }
+  }*/
 }

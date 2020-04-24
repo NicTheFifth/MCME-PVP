@@ -19,9 +19,9 @@
 package com.mcmiddleearth.mcme.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mcmiddleearth.mcme.events.PVP.Handlers.ChatHandler;
 import com.mcmiddleearth.mcme.events.PVP.PVPCore;
 import com.mcmiddleearth.mcme.events.Util.CLog;
-import com.mcmiddleearth.mcme.events.Util.Thompson;
 import com.mcmiddleearth.mcme.events.summerevent.SummerCommands;
 import com.mcmiddleearth.mcme.events.summerevent.SummerCore;
 import com.mcmiddleearth.mcme.events.winterevent.SnowManInvasion.EventHandles.SignListener;
@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Getter;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.WorldCreator;
@@ -118,6 +119,12 @@ public class Main extends JavaPlugin{
         if(PVP){
             PVPCore = new PVPCore();
             PVPCore.onEnable();
+        }
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        if(getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            PlaceholderAPI.registerPlaceholderHook("mcmePvP", new ChatHandler());
+        } else {
+            Logger.getGlobal().warning("PlaceholderAPI not enabled");
         }
         boolean Winter = this.getConfig().getBoolean("WinterEvent.Enabled");
         boolean Summer = this.getConfig().getBoolean("SummerEvent.Enabled");

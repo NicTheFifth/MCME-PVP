@@ -18,9 +18,7 @@
  */
 package com.mcmiddleearth.mcme.events.PVP.Gamemode;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mcmiddleearth.mcme.events.Main;
-import com.mcmiddleearth.mcme.events.PVP.Handlers.ChatHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.GearHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.GearHandler.SpecialGear;
 import com.mcmiddleearth.mcme.events.PVP.PVPCommandCore;
@@ -38,12 +36,9 @@ import java.util.Random;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
-import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -53,15 +48,9 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.ItemMeta.Spigot;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
 
 /**
  *
@@ -276,8 +265,7 @@ public class TeamConquest extends BasePluginGamemode {//Handled by plugin, shoul
                                 if(!Team.getRed().getCapturedPoints().contains(e.getClickedBlock().getLocation())){
                                     Team.getRed().getCapturedPoints().add(e.getClickedBlock().getLocation());
                                     Block b = e.getClickedBlock().getLocation().add(0, 1, 0).getBlock();
-                                    b.setType(Material.STAINED_GLASS);
-                                    b.setData((byte) 14);
+                                    b.setType(Material.RED_STAINED_GLASS);
                                     for(Player pl : players){
                                         pl.sendMessage(ChatColor.RED + "Red Team captured a point!");
                                     }
@@ -309,8 +297,7 @@ public class TeamConquest extends BasePluginGamemode {//Handled by plugin, shoul
                                 if(!Team.getBlue().getCapturedPoints().contains(e.getClickedBlock().getLocation())){
                                     Team.getBlue().getCapturedPoints().add(e.getClickedBlock().getLocation());
                                     Block b = e.getClickedBlock().getLocation().add(0, 1, 0).getBlock();
-                                    b.setType(Material.STAINED_GLASS);
-                                    b.setData((byte) 11);
+                                    b.setType(Material.BLUE_STAINED_GLASS);
                                     for(Player pl : players){
                                         pl.sendMessage(ChatColor.BLUE + "Blue Team captured a point!");
                                     }

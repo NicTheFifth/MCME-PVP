@@ -18,7 +18,10 @@
  */
 package com.mcmiddleearth.mcme.events.PVP;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import com.mcmiddleearth.mcme.events.Main;
+import com.mcmiddleearth.mcme.events.Permissions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -29,8 +32,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.server.ServerListPingEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  *
@@ -38,18 +41,20 @@ import org.bukkit.event.server.ServerListPingEvent;
  */
 public class Locker implements CommandExecutor, Listener{
     
-    private static volatile boolean locked = false;
+    private static volatile boolean locked = true;
     
-    private static String Message = "Server Locked";
+    private static String Message = "PvP-server Locked";
     
     @Override
     public boolean onCommand(CommandSender cs, Command cmnd, String string, String[] args) {
-        if(cs.isOp()){
+        if(cs.hasPermission(Permissions.LOCKER.getPermissionNode())){
             if(args.length > 0){
                 if(args[0].equalsIgnoreCase("kickall")){
                     for(Player p : Bukkit.getOnlinePlayers()){
-                        if(!p.isOp()){
-                            p.kickPlayer("Admin kicked all players");
+                        if(!p.hasPermission(Permissions.LOCKER.getPermissionNode())){
+                            //p.kickPlayer("PvP manager kicked all players");
+                            p.sendMessage("A PvP manager kicked all players");
+                            sendPlayerToMain(p);
                         }
                     }
                     cs.sendMessage("Kicked all!");
@@ -70,13 +75,17 @@ public class Locker implements CommandExecutor, Listener{
                         locked = true;
                         Message = "Server Locked!";
                         for(Player p : Bukkit.getOnlinePlayers()){
-                            if(!p.isOp()){
-                                p.kickPlayer("Server locked");
+                            if(!p.hasPermission(Permissions.LOCKER.getPermissionNode())){
+                                //p.kickPlayer("Server locked");
+                                p.sendMessage(Message);
+                                sendPlayerToMain(p);
                             }
                         }
                     }
                 }
             }
+        } else {
+            cs.sendMessage(ChatColor.RED + "You don't have the permission to lock the server!");
         }
         return true;
     }
@@ -90,9 +99,27 @@ public class Locker implements CommandExecutor, Listener{
     }
     
     @EventHandler
-    public void onPlayerLogin(PlayerLoginEvent e){
-        if(locked && !e.getPlayer().isOp()){
-            e.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.BLUE + Message);
+    public void onPlayerLogin(PlayerJoinEvent e){
+///Logger.getGlobal().info("Player login: "  +locked+ " "+e.getPlayer().hasPermission(Permissions.LOCKER.getPermissionNode()));
+//Logger.getGlobal().info("Player allowed: "+(locked && !e.getPlayer().hasPermission(Permissions.LOCKER.getPermissionNode())));
+        if(locked && !e.getPlayer().hasPermission(Permissions.LOCKER.getPermissionNode())){
+///Logger.getGlobal().info("Player kick! ");
+            e.getPlayer().sendMessage(Message);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    sendPlayerToMain(e.getPlayer());
+                }
+            }.runTaskLater(Main.getPlugin(),1);
+            //e.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.BLUE + Message);
         }
+    }
+    
+    private void sendPlayerToMain(Player player) {
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("ConnectOther");
+        out.writeUTF(player.getName());
+        out.writeUTF("world");
+        player.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
     }
 }

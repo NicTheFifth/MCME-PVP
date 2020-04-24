@@ -97,7 +97,7 @@ public class GearHandler {
                         lam.setColor(DyeColor.RED.getColor());
                         break;
                     case GOLD:
-                        lam.setColor(DyeColor.SILVER.getColor());
+                        lam.setColor(DyeColor.LIGHT_GRAY.getColor());
                         break;
                     case GREEN:
                         lam.setColor(DyeColor.LIME.getColor());
@@ -117,9 +117,9 @@ public class GearHandler {
                 items[i].setItemMeta(lam);
             }
             else{
-                items[i].addUnsafeEnchantment(new EnchantmentWrapper(34), 10);
+                items[i].addUnsafeEnchantment(Enchantment.DURABILITY, 10);
             }
-                items[i].getItemMeta().spigot().setUnbreakable(true);
+            items[i].getItemMeta().setUnbreakable(true);
         }
         p.getInventory().clear();
         p.getInventory().setHelmet(new ItemStack(Material.AIR));
@@ -272,7 +272,7 @@ public class GearHandler {
                             (PVPCommandCore.getRunningGame().getGm() instanceof TeamSlayer ||
                             PVPCommandCore.getRunningGame().getGm() instanceof TeamConquest)){
                         
-                        if(e.getClickedBlock().getType().equals(Material.MYCEL)){
+                        if(e.getClickedBlock().getType().equals(Material.MYCELIUM)){
                             Block toTnt = p.getWorld().getBlockAt(e.getClickedBlock().getLocation().add(0, 1, 0));
                             
                             toTnt.setType(Material.TNT);

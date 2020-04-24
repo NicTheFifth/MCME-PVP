@@ -2,33 +2,34 @@ name: ${project.artifactId}
 main: com.mcmiddleearth.mcme.events.Main
 version: ${project.version}
 authors: [DonoA, aaldim, lizzehface, meggawatts]
-author: DonoA
 depend: [WorldEdit]
+api-version: 1.15
+
 commands:
-    WorldJump:
-        description: jump worlds
-        usage: /WorldJump <world>
-    World:
-        description: world commands
-        usage: /world <save|load|list> <args>
-    PlugUp:
-        description: Self updates
-        usage: /PlugUp <step>
-    locker:
-        description: Lock commands
-        usage: /locker <some shit>
-    event:
-        description: Get get commands from current event also redirects to current event if only one is enabled
-        usage: /event <sub-command> [args]
-    winter:
-        description: Umbrella for all winter event commands
-        usages: /winter <sub-command> [args]
-    summer:
-        description: Umbrella for all summer event commands
-        usages: /summer <sub-command> [args]
-    pvp:
-        description: PVP commands go to the read-me for more info
-        usage: /pvp <some shit>
-    t:
-        description: Send a message to players on your team
-        usage: /t <message>
+  WorldJump:
+    description: jump worlds
+    usage: /WorldJump <world>
+  World:
+    description: world commands
+    usage: /world <save|load|list> <args>
+  PlugUp:
+    description: Self updates
+    usage: /PlugUp <step>
+  locker:
+    description: Lock commands
+    usage: /locker <some shit>
+  event:
+    description: Get get commands from current event also redirects to current event if only one is enabled
+    usage: /event <sub-command> [args]
+  winter:
+    description: Umbrella for all winter event commands
+    usages: /winter <sub-command> [args]
+  summer:
+    description: Umbrella for all summer event commands
+    usages: /summer <sub-command> [args]
+  pvp:
+    description: PVP commands go to the read-me for more info
+    usage: /pvp <some shit>
+  t:
+    description: Send a message to players on your team
+    usage: /t <message>

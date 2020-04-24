@@ -18,11 +18,11 @@
  */
 package com.mcmiddleearth.mcme.events.PVP.Handlers;
 
+import com.mcmiddleearth.mcme.events.Permissions;
 import java.util.HashMap;
 import lombok.Getter;
+import me.clip.placeholderapi.PlaceholderHook;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,7 +32,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
  *
  * @author Donovan <dallen@dallen.xyz>
  */
-public class ChatHandler implements Listener {
+public class ChatHandler extends PlaceholderHook implements Listener {
     
     @Getter
     private static HashMap<String, String> playerPrefixes = new HashMap<String, String>();
@@ -44,7 +44,7 @@ public class ChatHandler implements Listener {
         if(playerPrefixes.containsKey(p.getName())){
             return playerPrefixes.get(p.getName()) + " " + p.getName() + ChatColor.RESET + ": " + "%2$s";
         }else{
-            if(p.isOp()){
+            if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())){
                 return ChatColor.GOLD + "Staff" + " " + p.getName() + ChatColor.RESET + ": " + "%2$s";
             }else{
                 return ChatColor.GRAY + "Lobby" + " " + p.getName() + ChatColor.RESET + ": " + "%2$s";
@@ -54,6 +54,37 @@ public class ChatHandler implements Listener {
     
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e){
-        e.setFormat(formatChat(e.getPlayer()));
+        //e.setFormat(formatChat(e.getPlayer()));
     }
+    
+    @Override
+    public String onPlaceholderRequest(Player p, String identifier) {
+        if(p==null) {
+            return "null player";
+        }
+        switch(identifier) {
+            case "prefix":
+                if(playerPrefixes.containsKey(p.getName())) {
+                    return playerPrefixes.get(p.getName()) + " " + p.getName() + ChatColor.RESET + ": ";
+                } else {
+                    if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())){
+                        return ChatColor.GOLD + "PvP Staff" + " " + p.getName() + ChatColor.RESET + ": " ;
+                    }else{
+                        return ChatColor.GRAY + "Lobby" + " " + p.getName() + ChatColor.RESET + ": " ;
+                    }
+               }
+            case "color":
+                if(playerPrefixes.containsKey(p.getName())) {
+                    return ""+playerColors.get(p.getName());
+                } else {
+                    if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())){
+                        return ""+ChatColor.GOLD;
+                    }else{
+                        return ""+ChatColor.GRAY;
+                    }
+                }
+        }
+        return "";
+    }
+
 }

@@ -18,16 +18,10 @@
  */
 package com.mcmiddleearth.mcme.events;
 
-import com.mcmiddleearth.mcme.events.PVP.PVPCommandCore;
-import com.mcmiddleearth.mcme.events.Util.WebHook;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -100,7 +94,7 @@ public class CommandCore implements TabExecutor{
                 }
             }else if(cmd.getName().equalsIgnoreCase("plugup")){
                 if(sender.isOp()){
-                    new WebHook().update(sender);
+                    //new WebHook().update(sender);
                     return true;
                 }else{
                     return false;
@@ -108,7 +102,7 @@ public class CommandCore implements TabExecutor{
             }
         }else if(cmd.getName().equalsIgnoreCase("plugup")){
             if(sender.isOp()){
-                new WebHook().update(sender);
+                //new WebHook().update(sender);
                 return true;
             }else{
                 return false;
