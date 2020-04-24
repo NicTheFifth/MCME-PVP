@@ -22,7 +22,6 @@ import com.mcmiddleearth.mcme.events.PVP.Gamemode.BasePluginGamemode.GameState;
 import com.mcmiddleearth.mcme.events.PVP.maps.Map;
 import java.util.ArrayList;
 import org.bukkit.entity.Player;
-import org.bukkit.Achievement;
 
 /**
  *

@@ -39,7 +39,7 @@ public class GetCommand implements CommandExecutor {
             return true;
         }
         Player player = (Player) sender;
-        player.getInventory().addItem(new ItemStack(Material.SNOW_BALL, -1));
+        player.getInventory().addItem(new ItemStack(Material.SNOWBALL, -1));
         player.updateInventory();
         return true;
     }

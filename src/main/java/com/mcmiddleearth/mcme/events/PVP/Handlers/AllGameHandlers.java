@@ -19,17 +19,15 @@
 package com.mcmiddleearth.mcme.events.PVP.Handlers;
 
 import com.mcmiddleearth.mcme.events.Main;
-import com.mcmiddleearth.mcme.events.PVP.Gamemode.BasePluginGamemode;
 import com.mcmiddleearth.mcme.events.PVP.Gamemode.BasePluginGamemode.GameState;
 import com.mcmiddleearth.mcme.events.PVP.maps.Map;
 import com.mcmiddleearth.mcme.events.PVP.PVPCommandCore;
 import com.mcmiddleearth.mcme.events.PVP.PVPCore;
 import com.mcmiddleearth.mcme.events.PVP.Team;
 import com.mcmiddleearth.mcme.events.Util.DBmanager;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.math.BlockVector3;
 import java.io.File;
 import java.util.HashMap;
-import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -102,7 +100,7 @@ public class AllGameHandlers implements Listener{
                     return;
                 }
             }
-            if(!PVPCommandCore.getRunningGame().getRegion().contains(new Vector(to.getX(), to.getY(), to.getZ()))){
+            if(!PVPCommandCore.getRunningGame().getRegion().contains(BlockVector3.at(to.getX(), to.getY(), to.getZ()))){
                 e.setTo(new Location(to.getWorld(), from.getX(), to.getY(), from.getZ()));
                 
                 if(!lastOutOfBounds.containsKey(e.getPlayer().getName())){

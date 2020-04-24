@@ -18,13 +18,6 @@
  */
 package com.mcmiddleearth.mcme.events.summerevent;
 
-import com.mcmiddleearth.mcme.events.Main;
-import com.mcmiddleearth.mcme.events.PVP.Servlet.PVPServer;
-import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import lombok.Getter;
-
 /**
  *
  * @author Donovan <dallen@dallen.xyz>

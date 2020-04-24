@@ -24,8 +24,8 @@ import com.mcmiddleearth.mcme.events.PVP.Gamemode.BasePluginGamemode.GameState;
 import com.mcmiddleearth.mcme.events.Util.EventLocation;
 import com.mcmiddleearth.mcme.events.PVP.Gamemode.Gamemode;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.ChatHandler;
-import com.sk89q.worldedit.BlockVector2D;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.regions.Polygonal2DRegion;
 import com.sk89q.worldedit.regions.Region;
 import java.lang.reflect.Constructor;
@@ -235,11 +235,11 @@ public class Map {
     }
     
     public void initializeRegion(){
-        ArrayList<BlockVector2D> wePoints = new ArrayList<>();
+        ArrayList<BlockVector2> wePoints = new ArrayList<>();
         World world = Bukkit.getWorld("world");
         
         for(EventLocation e : regionPoints){
-            BlockVector2D point = new BlockVector2D(e.getX(), e.getZ());
+            BlockVector2 point = BlockVector2.at(e.getX(), e.getZ());
             wePoints.add(point);
         }
         

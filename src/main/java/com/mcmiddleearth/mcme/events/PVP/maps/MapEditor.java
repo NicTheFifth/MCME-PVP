@@ -29,21 +29,16 @@ import com.mcmiddleearth.mcme.events.PVP.Gamemode.TeamDeathmatch;
 
 import com.mcmiddleearth.mcme.events.PVP.Gamemode.TeamSlayer;
 import com.mcmiddleearth.mcme.events.PVP.PVPCore;
-import com.sk89q.worldedit.BlockVector2D;
+import com.mcmiddleearth.mcme.events.Permissions;
 import com.sk89q.worldedit.IncompleteRegionException;
-import com.sk89q.worldedit.LocalPlayer;
 import com.sk89q.worldedit.LocalSession;
-import com.sk89q.worldedit.ServerInterface;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
-import com.sk89q.worldedit.bukkit.BukkitServerInterface;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.bukkit.selections.Selection;
+import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.regions.Region;
-import com.sk89q.worldedit.session.SessionOwner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -54,6 +49,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.permissions.PermissionDefault;
 
 /**
  *
@@ -69,7 +65,7 @@ public class MapEditor implements CommandExecutor, Listener{
                 if(args[0].equalsIgnoreCase("lobby")){
                     p.sendMessage(ChatColor.GREEN + "Sending Signs");
                     for(Map m : Map.maps.values()){
-                        ItemStack sign = new ItemStack(Material.SIGN);
+                        ItemStack sign = new ItemStack(Material.OAK_WALL_SIGN);
                         ItemMeta im = sign.getItemMeta();
                         im.setDisplayName(m.getName());
                         String gamemode = "none";
@@ -179,7 +175,7 @@ public class MapEditor implements CommandExecutor, Listener{
                                 }
                             }
                             else if(args[2].equalsIgnoreCase("setarea")){
-                                BukkitPlayer bukkitP = new BukkitPlayer(PVPCore.getWorldEditPlugin(), PVPCore.getWorldEditPlugin().getServerInterface(), p);
+                                BukkitPlayer bukkitP = new BukkitPlayer(p);//PVPCore.getWorldEditPlugin(), PVPCore.getWorldEditPlugin().getServerInterface(), p);
                                 LocalSession session = PVPCore.getWorldEditPlugin().getWorldEdit().getSessionManager().get(bukkitP);
                                 
                                 try{
@@ -188,10 +184,10 @@ public class MapEditor implements CommandExecutor, Listener{
                                         p.sendMessage(ChatColor.RED + "I think you forgot to do //expand vert!");
                                     }
                                     else{
-                                        List<BlockVector2D> wePoints = r.polygonize(1000);
+                                        List<BlockVector2> wePoints = r.polygonize(1000);
                                         ArrayList<EventLocation> bPoints = new ArrayList<>();
                                         
-                                        for(BlockVector2D point : wePoints){
+                                        for(BlockVector2 point : wePoints){
                                             bPoints.add(new EventLocation(new Location(p.getWorld(), point.getX(), 1, point.getZ())));
                                         }
                                         
@@ -266,7 +262,7 @@ public class MapEditor implements CommandExecutor, Listener{
                         }
                     }
                 }else if(args[0].equalsIgnoreCase("pastemap")){
-                    if(p.isOp()){
+                    if(p.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())){
                         
                         if(args.length >= 7){
                             Location startLoc = new Location(p.getWorld(), Double.valueOf(args[1]), Double.valueOf(args[2]), Double.valueOf(args[3])); 
