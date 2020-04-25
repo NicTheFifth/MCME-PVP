@@ -1,7 +1,7 @@
 name: ${project.artifactId}
 main: com.mcmiddleearth.mcme.events.Main
 version: ${project.version}
-authors: [DonoA, aaldim, lizzehface, meggawatts]
+authors: [DonoA, aaldim, lizzehface, meggawatts, Eriol_Eandur]
 depend: [WorldEdit]
 api-version: 1.15
 

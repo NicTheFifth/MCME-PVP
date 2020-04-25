@@ -4,7 +4,7 @@
   <groupId>com.mcmiddleearth</groupId>
   <artifactId>MCME-Events</artifactId>
   <name>MCME-Events</name>
-  <version>0.2</version>
+  <version>1.0</version>
   <build>
     <resources>
       <resource>

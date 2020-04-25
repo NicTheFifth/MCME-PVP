@@ -18,16 +18,20 @@
  */
 package com.mcmiddleearth.mcme.events.PVP;
 
-import com.mcmiddleearth.mcme.events.PVP.maps.MapEditor;
-import com.mcmiddleearth.mcme.events.PVP.maps.Map;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import com.mcmiddleearth.mcme.events.Main;
 import com.mcmiddleearth.mcme.events.PVP.Gamemode.BasePluginGamemode.GameState;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.BukkitTeamHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.ChatHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.CommandBlockHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.GearHandler;
+import com.mcmiddleearth.mcme.events.PVP.maps.Map;
+import com.mcmiddleearth.mcme.events.PVP.maps.MapEditor;
 import com.mcmiddleearth.mcme.events.Permissions;
 import java.io.File;
+import java.util.Arrays;
+import java.util.logging.Logger;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -42,7 +46,7 @@ import org.bukkit.entity.Player;
  *
  * @author Donovan <dallen@dallen.xyz>
  */
-public class PVPCommandCore implements CommandExecutor{
+public class PVPCommandCore implements CommandExecutor {
     
     @Getter @Setter
     protected static Map queuedGame = null;
@@ -114,7 +118,10 @@ public class PVPCommandCore implements CommandExecutor{
             }   
             else if(args.length>0 && args[0].equalsIgnoreCase("togglevoxel") && cs.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())){
                 toggleVoxel(false);
+            } else {
+                cs.sendMessage(ChatColor.RED + "You are at the PvP server already !");
             }
+            return true;
         }
         else if(cs instanceof BlockCommandSender){
             return new CommandBlockHandler().onCommand(cs, cmnd, label, args);
@@ -235,9 +242,10 @@ public class PVPCommandCore implements CommandExecutor{
                             int newParam = Integer.parseInt(args[3]);
 
                             if(queuedGame == null) {
-                                    parameter = newParam;
-                                    sender.sendMessage("Map: " + m.getTitle() + ", Gamemode: " + m.getGmType());
-                                for(Player p : Bukkit.getOnlinePlayers()){
+                                parameter = newParam;
+                                sender.sendMessage("Map: " + m.getTitle() + ", Gamemode: " + m.getGmType());
+                                sendBroadcast((Player)sender,m,args);
+                                /*for(Player p : Bukkit.getOnlinePlayers()){
 
                                     p.sendMessage(ChatColor.GRAY + p.getName() + " has started a game");
                                     p.sendMessage(ChatColor.GRAY + "Map: " + ChatColor.GREEN + m.getTitle() + ChatColor.GRAY + ", Gamemode: " + ChatColor.GREEN + m.getGmType());
@@ -245,7 +253,7 @@ public class PVPCommandCore implements CommandExecutor{
                                     p.sendMessage(ChatColor.GRAY + "There are only " + m.getMax() + " slots left");
                                     p.sendMessage(ChatColor.GREEN + "Do /pvp rules " + removeSpaces(m.getGmType()) + " if you don't know how this gamemode works!");
 
-                                }
+                                }*/
                                 queuedGame = m;
                             }
                             else if(queuedGame == m && newParam != parameter) {
@@ -263,6 +271,31 @@ public class PVPCommandCore implements CommandExecutor{
                     else{
                         parameter = 0;
                         sender.sendMessage("Map: " + m.getTitle() + ", Gamemode: " + m.getGmType());
+                        sendBroadcast((Player)sender,m,args);
+                        /*ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                        out.writeUTF("PlayerList");
+                        out.writeUTF("ALL");
+                        Player player = (Player) sender;
+                        player.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
+                        Bukkit.getServer().getMessenger().registerIncomingPluginChannel(Main.getPlugin(), "BungeeCord", 
+                                new PluginMessageListener() {
+                                    @Override
+                                    public void onPluginMessageReceived(String channel, Player player, byte[] message) {
+                                        if (!channel.equals("BungeeCord")) {
+                                          return;
+                                        }
+                                        ByteArrayDataInput in = ByteStreams.newDataInput(message);
+                                        String subchannel = in.readUTF();
+                                        if (subchannel.equals("PlayerList")) {
+                                            String server = in.readUTF(); 
+                                            String[] playerList = in.readUTF().split(", ");
+                                            for(String playerName: playerList) {
+                                                
+                                            }
+                                            Bukkit.getServer().getMessenger().unregisterIncomingPluginChannel(Main.getPlugin(), "BungeeCord", this);
+                                        }
+                                    }
+                                });                      
                             for(Player pl : Bukkit.getOnlinePlayers()){
 
                                 pl.sendMessage(ChatColor.GRAY + sender.getName() + " has started a game");
@@ -271,7 +304,7 @@ public class PVPCommandCore implements CommandExecutor{
                                 pl.sendMessage(ChatColor.GRAY + "There are only " + m.getMax() + " slots left");
                                 pl.sendMessage(ChatColor.GREEN + "Do /pvp rules " + removeSpaces(m.getGmType()) + " if you don't know how this gamemode works!");
 
-                            }
+                            }*/
                         queuedGame = m;
                     }
 
@@ -282,6 +315,20 @@ public class PVPCommandCore implements CommandExecutor{
             }
             return true;
 	}
+        
+        private void sendBroadcast(Player player, Map m,String[] args) {
+            if(!Arrays.asList(args).contains("test")) {
+                ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                out.writeUTF("Message");
+                out.writeUTF("ALL");
+                out.writeUTF(ChatColor.GRAY + player.getName() + " has started a game\n"
+                    +ChatColor.GRAY + "Map: " + ChatColor.GREEN + m.getTitle() + ChatColor.GRAY + ", Gamemode: " + ChatColor.GREEN + m.getGmType()+"\n"
+                    +ChatColor.GRAY + "Use " + ChatColor.GREEN + "/pvp join" + ChatColor.GRAY + " to join the game\n"
+                    +ChatColor.GRAY + "There are only " + m.getMax() + " slots left\n"
+                    +ChatColor.GREEN + "Do /pvp rules " + removeSpaces(m.getGmType()) + " if you don't know how this gamemode works!");
+                player.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
+            }
+        }
 	
 	private boolean pvpGameEnd(CommandSender sender) {
             if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())){
@@ -423,6 +470,7 @@ public class PVPCommandCore implements CommandExecutor{
             p.sendMessage(ChatColor.RED + "Deleted " + map);
             return true;
 	}
+
 }
 
                 

@@ -32,6 +32,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -99,6 +100,14 @@ public class Locker implements CommandExecutor, Listener{
     }
     
     @EventHandler
+    public void onPlayerLeave(PlayerQuitEvent event) {
+        if(Bukkit.getOnlinePlayers().isEmpty()
+                || Bukkit.getOnlinePlayers().stream().allMatch(player -> player.equals(event.getPlayer()))) {
+            locked = true;
+        }
+    }
+    
+    @EventHandler
     public void onPlayerLogin(PlayerJoinEvent e){
 ///Logger.getGlobal().info("Player login: "  +locked+ " "+e.getPlayer().hasPermission(Permissions.LOCKER.getPermissionNode()));
 //Logger.getGlobal().info("Player allowed: "+(locked && !e.getPlayer().hasPermission(Permissions.LOCKER.getPermissionNode())));
@@ -114,6 +123,7 @@ public class Locker implements CommandExecutor, Listener{
             //e.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.BLUE + Message);
         }
     }
+    
     
     private void sendPlayerToMain(Player player) {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
