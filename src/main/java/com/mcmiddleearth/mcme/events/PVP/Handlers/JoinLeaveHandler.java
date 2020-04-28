@@ -145,33 +145,37 @@ public class JoinLeaveHandler implements Listener{
     
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e){
-        
+        e.setQuitMessage(handlePlayerQuit(e.getPlayer()));
+    }
+    
+    public static String handlePlayerQuit(Player player) {
+        String quitMessage = "";
         if(PVPCommandCore.getQueuedGame() != null){
-            PVPCommandCore.getQueuedGame().getGm().getPlayers().remove(e.getPlayer());
+            PVPCommandCore.getQueuedGame().getGm().getPlayers().remove(player);
         }
         else if(PVPCommandCore.getRunningGame() != null){
-            PVPCommandCore.getRunningGame().getGm().getPlayers().remove(e.getPlayer());
+            PVPCommandCore.getRunningGame().getGm().getPlayers().remove(player);
         }
         
-        if(PlayerStat.getPlayerStats().get(e.getPlayer().getName()) != null){
-            PlayerStat.getPlayerStats().get(e.getPlayer().getName()).saveStat();
-            PlayerStat.getPlayerStats().remove(e.getPlayer().getName());
+        if(PlayerStat.getPlayerStats().get(player.getName()) != null){
+            PlayerStat.getPlayerStats().get(player.getName()).saveStat();
+            PlayerStat.getPlayerStats().remove(player.getName());
         }
-        //Thompson.getInst().farwell(e.getPlayer());
+        //Thompson.getInst().farwell(player);
         
         if(PVPCommandCore.getRunningGame() != null){
-            e.setQuitMessage(ChatHandler.getPlayerColors().get(e.getPlayer().getName()) + e.getPlayer().getName() + ChatColor.GRAY + " left the fight!");
+            quitMessage = ChatHandler.getPlayerColors().get(player.getName()) + player.getName() + ChatColor.GRAY + " left the fight!";
         }
         
-        AntiCheatListeners.getLastInteract().remove(e.getPlayer().getName());
+        AntiCheatListeners.getLastInteract().remove(player.getName());
         
-        e.getPlayer().getInventory().clear();
-        e.getPlayer().getInventory().setArmorContents(new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR),
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(new ItemStack[] {new ItemStack(Material.AIR), new ItemStack(Material.AIR),
             new ItemStack(Material.AIR), new ItemStack(Material.AIR)});
         
-        Team.removeFromTeam(e.getPlayer());
-        ChatHandler.getPlayerColors().remove(e.getPlayer().getName());
-        ChatHandler.getPlayerPrefixes().remove(e.getPlayer().getName());
-        
+        Team.removeFromTeam(player);
+        ChatHandler.getPlayerColors().remove(player.getName());
+        ChatHandler.getPlayerPrefixes().remove(player.getName());
+        return quitMessage;
     }
 }

@@ -169,7 +169,9 @@ public class PlayerStat {
     }
     public static void addGameSpectatedAll(){
         for(Player p : Team.getSpectator().getMembers()){
-            PlayerStat.getPlayerStats().get(p.getName()).addGameSpectated();
+            if(p!=null && p.isOnline()) {
+                PlayerStat.getPlayerStats().get(p.getName()).addGameSpectated();
+            }
         }
     }
     

@@ -26,6 +26,7 @@ import com.mcmiddleearth.mcme.events.PVP.Handlers.BukkitTeamHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.ChatHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.CommandBlockHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.GearHandler;
+import com.mcmiddleearth.mcme.events.PVP.Handlers.JoinLeaveHandler;
 import com.mcmiddleearth.mcme.events.PVP.maps.Map;
 import com.mcmiddleearth.mcme.events.PVP.maps.MapEditor;
 import com.mcmiddleearth.mcme.events.Permissions;
@@ -78,6 +79,9 @@ public class PVPCommandCore implements CommandExecutor {
                 } 
                 else if(args[0].equalsIgnoreCase("join")){
                 	return pvpJoin(p);
+                }
+                else if(args[0].equalsIgnoreCase("kick") && p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())){
+                	return pvpKick(p, args[1]);
                 }
                 else if(args[0].equalsIgnoreCase("pipe")){
                     GearHandler.giveCustomItem(p, GearHandler.CustomItem.PIPE);
@@ -470,6 +474,40 @@ public class PVPCommandCore implements CommandExecutor {
             p.sendMessage(ChatColor.RED + "Deleted " + map);
             return true;
 	}
+        
+        private boolean pvpKick(Player p, String kickedPlayerName) {
+            Player kickedPlayer = Bukkit.getPlayer(kickedPlayerName);
+            if(kickedPlayer==null) {
+                p.sendMessage(ChatColor.RED + "Player not found.");
+                return true;
+            }
+            Map m;
+        
+            if(queuedGame != null){
+                m = queuedGame;
+            }
+            else if(runningGame != null){
+                m = runningGame;
+            }
+            else{
+                p.sendMessage(ChatColor.RED + "There is no queued or running game!");
+                return true;
+            }
+
+            if(!m.getGm().getPlayers().contains(kickedPlayer)){
+                p.sendMessage(ChatColor.RED+"Player is not in the current game.");
+                return true;
+            } else {
+                //JoinLeaveHandler.handlePlayerQuit(kickedPlayer);
+                ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                out.writeUTF("ConnectOther");
+                out.writeUTF(kickedPlayerName);
+                out.writeUTF("world");
+                p.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
+                p.sendMessage(ChatColor.GREEN+"Kicked "+kickedPlayerName+" from the PvP server!");
+            }
+            return true;
+        }
 
 }
 
