@@ -132,7 +132,16 @@ public class PVPCommandCore implements CommandExecutor {
         }
         return false;
     }
-    
+
+    public List<String> onTabComplete(CommandSender cs, Command cmnd, String label, String[] args){
+        List<String> returnValue = new List<>();
+        if(cs instanceof Player){
+
+            returnValue.add("string here");
+
+        }
+        return returnValue;
+    }
     public static void toggleVoxel(boolean onlyDisable){
         try{
             if(Bukkit.getPluginManager().getPlugin("VoxelSniper").isEnabled()){
