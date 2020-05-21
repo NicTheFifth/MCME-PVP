@@ -90,7 +90,28 @@ public class Locker implements CommandExecutor, Listener{
         }
         return true;
     }
-    
+    public List<String> onTabComplete(CommandSender cs, Command cmnd, String label, String[] args) {
+        List<String> arguments = new ArrayList<>();
+        Player p = (Player) cs;
+        if (
+        cmd.getName().equalsIgnoreCase("locker") && ((p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) || (p;.
+        hasPermission(Permissions.PVP_ADMIN.getPermissionNode())))){
+            arguments.add("lock");
+            arguments.add("kickall");
+        }
+        if (args.length == 1) {
+            for (String s : arguments) {
+                if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                    Flist.add(s);
+                }
+            }
+            return Flist;
+        } else {
+            return null;
+        }
+    }
+
+
     @EventHandler (priority = EventPriority.HIGHEST)
     public void onServerListPing(ServerListPingEvent e){
         if(locked){
