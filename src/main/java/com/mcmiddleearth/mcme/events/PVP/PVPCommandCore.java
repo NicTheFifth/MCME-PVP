@@ -253,8 +253,11 @@ public class PVPCommandCore implements CommandExecutor {
                     else if(!m.getGm().requiresParameter().equals("none")){
                        try{
                             int newParam = Integer.parseInt(args[3]);
-
-                            if(queuedGame == null) {
+                            if(newParam < 1 ) {
+                               sender.sendMessage(ChatColor.Gray + "Parameter is not allowed to be this value.");
+                               break;
+                            }
+                            else if(queuedGame == null) {
                                 parameter = newParam;
                                 sender.sendMessage("Map: " + m.getTitle() + ", Gamemode: " + m.getGmType());
                                 sendBroadcast((Player)sender,m,args);
@@ -273,9 +276,7 @@ public class PVPCommandCore implements CommandExecutor {
                                     sender.sendMessage(ChatColor.GRAY + "Parameter changed from " + ChatColor.GREEN + parameter + ChatColor.GRAY + " to " + ChatColor.GREEN + newParam);
                                     parameter = newParam;
                             }
-                            else if(newParam < 1 ) {
-                                sender.sendMessage(ChatColor.Gray + "Parameter is not allowed to be this value.")
-                            }
+
                         }
                         catch(ArrayIndexOutOfBoundsException ex) {
                             sender.sendMessage(ChatColor.RED + m.getGmType() + " needs you to enter " + m.getGm().requiresParameter() + "!");
