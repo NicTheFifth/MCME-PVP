@@ -94,7 +94,7 @@ public class Locker implements CommandExecutor, Listener{
         List<String> arguments = new ArrayList<>();
         Player p = (Player) cs;
         if (
-        cmd.getName().equalsIgnoreCase("locker") && ((p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) || (p;.
+        cmd.getName().equalsIgnoreCase("locker") && ((p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) || (p.
         hasPermission(Permissions.PVP_ADMIN.getPermissionNode())))){
             arguments.add("lock");
             arguments.add("kickall");
