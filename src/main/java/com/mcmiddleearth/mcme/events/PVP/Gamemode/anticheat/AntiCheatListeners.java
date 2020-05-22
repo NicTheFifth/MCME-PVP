@@ -129,7 +129,9 @@ public class AntiCheatListeners implements Listener{
                         command.equalsIgnoreCase("/tell") ||
                         command.equalsIgnoreCase("/msg") ||
                         command.equalsIgnoreCase("/tellraw") ||
-                        command.equalsIgnoreCase("/title")){
+                        command.equalsIgnoreCase("/title")||
+                        command.equalsIgnoreCase("/w")||
+                        command.equalsIgnoreCase("/r")){
                     cs.sendMessage(ChatColor.RED + "You can't do that during a game!");
                     e.setCancelled(true);
                 }

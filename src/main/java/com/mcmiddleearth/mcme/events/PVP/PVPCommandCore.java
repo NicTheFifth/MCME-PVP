@@ -132,7 +132,85 @@ public class PVPCommandCore implements CommandExecutor {
         }
         return false;
     }
-    
+
+    public List<String> onTabComplete(CommandSender cs, Command cmnd, String label, String[] args){
+        List<String> arguments = new ArrayList<>();
+        Player p = (Player) cs;
+        if (cmd.getName().equalsIgnoreCase("pvp")) {
+            if (args.Length == 1) {
+                arguments.add("join");
+                arguments.add("rules");
+                arguments.add("pipe");
+                arguments.add("stats");
+                if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
+                    arguments.add("map");
+                    arguments.add("game");
+                    arguments.add("kick");
+                    if(sender.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
+                        arguments.add("removegame");
+                        arguments.add("togglevoxel");
+                        arguments.add("lobby");
+                    }
+                }
+            } else if (args.length == 2) {
+                if (args[0].equalsIgnoreCase("map")) {
+                    if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
+                        arguments.add("list");
+                        if (sender.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
+                            arguments.add("<map-name>");
+                        }
+                    }
+                } else if (args[0].equalsIgnoreCase("game")) {
+                    if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
+                        arguments.add("quickstart");
+                        arguments.add("start");
+                        arguments.add("end");
+                        arguments.add("getgames");
+                    }
+                } else if (args[0].equalsIgnoreCase("rules")) {
+                    arguments.add("infected");
+                    arguments.add("oneinthequiver");
+                    arguments.add("ringbearer");
+                    arguments.add("teamslayer");
+                    arguments.add("teamdeathmatch");
+                    arguments.add("teamconquest");
+                } else if (args[0].equalsIgnoreCase("stats")) {
+                    if(sender.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
+                        arguments.add("clear");
+                    }
+                } else if (args[0].equalsIgnoreCase("removegame")) {
+                    if (sender.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
+                        arguments.add("<map-name>");
+                    }
+                }
+            } else if (args.length == 3) {
+                if (args[0].equalsIgnoreCase("map") && args[1].equalsIgnoreCase("<map-name>")) {
+                    if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
+                        arguments.add("<subcommand>");
+                    }
+                } else if (args[1].equalsIgnoreCase("quickstart")) {
+                    if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
+                        arguments.add("<map-name>");
+                    }
+                }
+            } else if (args.length == 4) {
+                if (args[1].equalsIgnoreCase("quickstart")) {
+                    if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
+                        arguments.add("test");
+                    }
+                }
+            } if (args.length =<1 && arguments.length != 0){
+                for (String s : arguments) {
+                    if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                        Flist.add(s);
+                    }
+                }
+                return Flist;
+            } else
+                return null;
+        }
+    }
+
     public static void toggleVoxel(boolean onlyDisable){
         try{
             if(Bukkit.getPluginManager().getPlugin("VoxelSniper").isEnabled()){
@@ -210,8 +288,9 @@ public class PVPCommandCore implements CommandExecutor {
             if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())){
                 if(queuedGame == null){
                     sender.sendMessage(ChatColor.RED + "Can't start! No game is queued!");
-                }
-                else if(runningGame == null){
+                } else if(queuedGame.getGm().getPlayers().length() == 0 ){
+                    sender.sendMessage(ChatColor.RED + "Can't start! No players have joined!");
+                } else if(runningGame == null){
                     queuedGame.getGm().Start(queuedGame, parameter);
                     runningGame = queuedGame;
                     queuedGame = null;
@@ -244,8 +323,11 @@ public class PVPCommandCore implements CommandExecutor {
                     else if(!m.getGm().requiresParameter().equals("none")){
                        try{
                             int newParam = Integer.parseInt(args[3]);
-
-                            if(queuedGame == null) {
+                            if(newParam < 1 ) {
+                               sender.sendMessage(ChatColor.Gray + "Parameter is not allowed to be this value.");
+                               break;
+                            }
+                            else if(queuedGame == null) {
                                 parameter = newParam;
                                 sender.sendMessage("Map: " + m.getTitle() + ", Gamemode: " + m.getGmType());
                                 sendBroadcast((Player)sender,m,args);
@@ -264,6 +346,7 @@ public class PVPCommandCore implements CommandExecutor {
                                     sender.sendMessage(ChatColor.GRAY + "Parameter changed from " + ChatColor.GREEN + parameter + ChatColor.GRAY + " to " + ChatColor.GREEN + newParam);
                                     parameter = newParam;
                             }
+
                         }
                         catch(ArrayIndexOutOfBoundsException ex) {
                             sender.sendMessage(ChatColor.RED + m.getGmType() + " needs you to enter " + m.getGm().requiresParameter() + "!");
@@ -422,11 +505,12 @@ public class PVPCommandCore implements CommandExecutor {
         }
         else{
             p.sendMessage("You are already part of a game");
-            if(p.getName().equalsIgnoreCase("Despot666")){
-                p.kickPlayer("<3 -Dallen");
-            }
+            //if(p.getName().equalsIgnoreCase("Despot666")){
+            //    p.kickPlayer("<3 -Dallen");
+            //}
         }
-        
+        p.setGameMode(GameMode.CREATIVE;
+        p.setGameMode(GameMode.SURVIVAL);
         return true;
 	}
 	

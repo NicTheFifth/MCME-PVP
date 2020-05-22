@@ -226,7 +226,7 @@ public class GearHandler {
                             PVPCommandCore.getRunningGame().getGm().getPlayers().contains(e.getPlayer()) &&
                             PVPCommandCore.getRunningGame().getGm() instanceof Ringbearer){
                         
-                        if(p.getExp() >= 1.00f){
+                        if(p.getExp() >= 0.84f){
                             p.setExp(0);
                             p.sendMessage(ChatColor.YELLOW + "You are now invisible!");
                             p.sendMessage(ChatColor.GRAY + "Don't hold anything in your hand, or you'll be seen!");
