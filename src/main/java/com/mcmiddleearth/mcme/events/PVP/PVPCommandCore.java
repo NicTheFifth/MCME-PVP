@@ -288,8 +288,9 @@ public class PVPCommandCore implements CommandExecutor {
             if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())){
                 if(queuedGame == null){
                     sender.sendMessage(ChatColor.RED + "Can't start! No game is queued!");
-                }
-                else if(runningGame == null){
+                } else if(queuedGame.getGm().getPlayers().length() == 0 ){
+                    sender.sendMessage(ChatColor.RED + "Can't start! No players have joined!");
+                } else if(runningGame == null){
                     queuedGame.getGm().Start(queuedGame, parameter);
                     runningGame = queuedGame;
                     queuedGame = null;
@@ -504,11 +505,12 @@ public class PVPCommandCore implements CommandExecutor {
         }
         else{
             p.sendMessage("You are already part of a game");
-            if(p.getName().equalsIgnoreCase("Despot666")){
-                p.kickPlayer("<3 -Dallen");
-            }
+            //if(p.getName().equalsIgnoreCase("Despot666")){
+            //    p.kickPlayer("<3 -Dallen");
+            //}
         }
-        
+        p.setGameMode(GameMode.CREATIVE;
+        p.setGameMode(GameMode.SURVIVAL);
         return true;
 	}
 	

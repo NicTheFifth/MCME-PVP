@@ -119,6 +119,9 @@ public abstract class BasePluginGamemode implements Gamemode{
                 p.setHealth(20);
             }
         }
+        for(Arrow arrow : p.getWorld().getEntitiesByClass(Arrow.class)) {
+            arrow.remove();
+        }
     };
     
     
