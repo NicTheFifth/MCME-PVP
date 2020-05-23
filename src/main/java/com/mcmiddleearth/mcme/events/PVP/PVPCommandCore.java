@@ -31,7 +31,9 @@ import com.mcmiddleearth.mcme.events.PVP.maps.Map;
 import com.mcmiddleearth.mcme.events.PVP.maps.MapEditor;
 import com.mcmiddleearth.mcme.events.Permissions;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,6 +44,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.GameMode;
 
 /**
  *
@@ -138,7 +141,7 @@ public class PVPCommandCore implements CommandExecutor {
         List<String> Flist = new ArrayList<>();
         Player p = (Player) sender;
         if (cmd.getName().equalsIgnoreCase("pvp")) {
-            if (args.Length == 1) {
+            if (args.length == 1) {
                 arguments.add("join");
                 arguments.add("rules");
                 arguments.add("pipe");
@@ -209,7 +212,8 @@ public class PVPCommandCore implements CommandExecutor {
                 return Flist;
             } else
                 return null;
-        }
+        } else
+            return null;
     }
 
     public static void toggleVoxel(boolean onlyDisable){
@@ -289,7 +293,7 @@ public class PVPCommandCore implements CommandExecutor {
             if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())){
                 if(queuedGame == null){
                     sender.sendMessage(ChatColor.RED + "Can't start! No game is queued!");
-                } else if(queuedGame.getGm().getPlayers().length() == 0 ){
+                } else if(queuedGame.getGm().getPlayers().size() == 0 ){
                     sender.sendMessage(ChatColor.RED + "Can't start! No players have joined!");
                 } else if(runningGame == null){
                     queuedGame.getGm().Start(queuedGame, parameter);
@@ -325,7 +329,7 @@ public class PVPCommandCore implements CommandExecutor {
                        try{
                             int newParam = Integer.parseInt(args[3]);
                             if(newParam < 1 ) {
-                               sender.sendMessage(ChatColor.Gray + "Parameter is not allowed to be this value.");
+                               sender.sendMessage(ChatColor.GRAY + "Parameter is not allowed to be this value.");
                             } else if(queuedGame == null) {
                                 parameter = newParam;
                                 sender.sendMessage("Map: " + m.getTitle() + ", Gamemode: " + m.getGmType());

@@ -27,7 +27,6 @@
   <component name="ChangeListManager">
     <list default="true" id="9db05995-4421-4e0a-a74d-35d406cc9b5d" name="Default Changelist" comment="Derpfix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcmiddleearth/mcme/events/PVP/Locker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mcmiddleearth/mcme/events/PVP/Locker.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mcmiddleearth/mcme/events/PVP/PVPCommandCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mcmiddleearth/mcme/events/PVP/PVPCommandCore.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -117,7 +116,21 @@
       <option name="project" value="LOCAL" />
       <updated>1590239147995</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Derpfix">
+      <created>1590240376510</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1590240376510</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Derpfix">
+      <created>1590240635168</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1590240635168</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -150,10 +163,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="277" y="57" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1590016872861" />
-    <state x="361" y="145" key="Vcs.Push.Dialog.v2" timestamp="1590144540781">
+    <state x="361" y="145" key="Vcs.Push.Dialog.v2" timestamp="1590240666772">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="145" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1590144540781" />
+    <state x="361" y="145" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1590240666772" />
     <state x="568" y="314" key="git4idea.remote.GitConfigureRemotesDialog" timestamp="1590016036062">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
