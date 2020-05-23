@@ -32,10 +32,7 @@ import com.mcmiddleearth.mcme.events.Permissions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.command.BlockCommandSender;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -47,7 +44,7 @@ import java.util.List;
  *
  * @author Donovan <dallen@dallen.xyz>
  */
-public class PVPCommandCore implements CommandExecutor {
+public class PVPCommandCore implements CommandExecutor, TabCompleter {
     
     protected static Map queuedGame = null;
     

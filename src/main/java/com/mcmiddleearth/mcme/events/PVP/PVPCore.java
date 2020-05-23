@@ -81,7 +81,9 @@ public class PVPCore implements Event{
         }
         CLog.println(maps);
         Main.getPlugin().getCommand("pvp").setExecutor(new PVPCommandCore());
+        Main.getPlugin().getCommand("pvp").setTabCompleter(new PVPCommandCore());
         Main.getPlugin().getCommand("locker").setExecutor(new Locker());
+        Main.getPlugin().getCommand("locker").setTabCompleter(new Locker());
         Main.getPlugin().getCommand("t").setExecutor(new TeamChat());
         PluginManager pm = Main.getServerInstance().getPluginManager();
         pm.registerEvents(new MapEditor(), Main.getPlugin());
