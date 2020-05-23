@@ -80,7 +80,7 @@ public abstract class BasePluginGamemode implements Gamemode{
             }
         }*/
         
-    };
+    }
     
     @Override
     public void End(Map m){
@@ -122,7 +122,7 @@ public abstract class BasePluginGamemode implements Gamemode{
         for(Arrow arrow : p.getWorld().getEntitiesByClass(Arrow.class)) {
             arrow.remove();
         }
-    };
+    }
     
     
     public boolean midgamePlayerJoin(Player p){
@@ -164,5 +164,5 @@ public abstract class BasePluginGamemode implements Gamemode{
         }
         
         return true;
-    };
+    }
 }
