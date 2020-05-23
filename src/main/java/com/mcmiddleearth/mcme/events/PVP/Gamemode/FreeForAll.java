@@ -24,16 +24,10 @@ import com.mcmiddleearth.mcme.events.PVP.Handlers.ChatHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.GearHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.GearHandler.SpecialGear;
 import com.mcmiddleearth.mcme.events.PVP.PVPCore;
-import com.mcmiddleearth.mcme.events.PVP.maps.Map;
 import com.mcmiddleearth.mcme.events.PVP.PlayerStat;
 import com.mcmiddleearth.mcme.events.PVP.Team;
+import com.mcmiddleearth.mcme.events.PVP.maps.Map;
 import com.mcmiddleearth.mcme.events.Util.EventLocation;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Random;
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -46,6 +40,12 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Random;
+
 /**
  *
  * @author Eric
@@ -54,19 +54,16 @@ public class FreeForAll extends BasePluginGamemode{
     
     private boolean eventsRegistered = false;
     
-    @Getter
     private final ArrayList<String> NeededPoints = new ArrayList<String>(Arrays.asList(new String[] {
         "PlayerSpawn"
     }));
     
-    @Getter
     private GameState state;
     
     Map map;
     
     private int count;
     
-    @Getter
     private Objective Points;
     
     private GameEvents events;
@@ -79,7 +76,6 @@ public class FreeForAll extends BasePluginGamemode{
     
     private int time;
     
-    @Getter
     private boolean midgameJoin = true;
     
     private final ChatColor[] chatColors = new ChatColor[]{
@@ -470,5 +466,24 @@ public class FreeForAll extends BasePluginGamemode{
             }
             
         }
+    }
+
+    @Override
+    public ArrayList<String> getNeededPoints() {
+        return NeededPoints;
+    }
+
+    @Override
+    public GameState getState() {
+        return state;
+    }
+
+    public Objective getPoints() {
+        return Points;
+    }
+
+    @Override
+    public boolean isMidgameJoin() {
+        return midgameJoin;
     }
 }

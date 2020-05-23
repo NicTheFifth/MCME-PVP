@@ -21,72 +21,51 @@ package com.mcmiddleearth.mcme.events.PVP.maps;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mcmiddleearth.mcme.events.PVP.Gamemode.BasePluginGamemode;
 import com.mcmiddleearth.mcme.events.PVP.Gamemode.BasePluginGamemode.GameState;
-import com.mcmiddleearth.mcme.events.Util.EventLocation;
 import com.mcmiddleearth.mcme.events.PVP.Gamemode.Gamemode;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.ChatHandler;
+import com.mcmiddleearth.mcme.events.Util.EventLocation;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.regions.Polygonal2DRegion;
 import com.sk89q.worldedit.regions.Region;
+import org.bukkit.*;
+import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
+import org.bukkit.event.block.SignChangeEvent;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lombok.Getter;
-import lombok.Setter;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
-import org.bukkit.event.block.SignChangeEvent;
 
 /**
  *
  * @author Donovan <dallen@dallen.xyz>
  */
 public class Map {
-    @Getter @Setter
     private int Max;
 
-    @Getter @Setter @JsonIgnore
+    @JsonIgnore
     private int Curr;
 
-    @Getter @Setter
     private EventLocation LobbySign;
     
-    @Getter @Setter @JsonIgnore
+    @JsonIgnore
     private Gamemode gm;
-    
-    @Getter @Setter
+
     private String gmType;
-    
-    @Getter @Setter
     private EventLocation Spawn;
-    
-    @Getter @Setter
     private String name;
-    
-    @Getter @Setter
     private String title;
-    
-    @Getter @Setter
     private HashMap<String, EventLocation> ImportantPoints = new HashMap<>();
-    
-    @Setter
     private ArrayList<EventLocation> spawnPoints = new ArrayList<>();
-    
-    @Getter @Setter
     private ArrayList<EventLocation> regionPoints = new ArrayList<>();
     
-    @JsonIgnore @Getter
+    @JsonIgnore
     private Region region;
     
-    @Getter @Setter
     private String resourcePackURL;
 
     public static HashMap<String, Map> maps = new HashMap<>();
@@ -255,8 +234,103 @@ public class Map {
         }
         return null;
     }
-    
-//    @JsonIgnore
+
+    public Gamemode getGm() {
+        return gm;
+    }
+
+    public int getMax() {
+        return Max;
+    }
+
+    public int getCurr() {
+        return Curr;
+    }
+
+    public EventLocation getLobbySign() {
+        return LobbySign;
+    }
+
+    public String getGmType() {
+        return gmType;
+    }
+
+    public EventLocation getSpawn() {
+        return Spawn;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public HashMap<String, EventLocation> getImportantPoints() {
+        return ImportantPoints;
+    }
+
+    public ArrayList<EventLocation> getRegionPoints() {
+        return regionPoints;
+    }
+
+    public Region getRegion() {
+        return region;
+    }
+
+    public String getResourcePackURL() {
+        return resourcePackURL;
+    }
+
+    public void setMax(int max) {
+        Max = max;
+    }
+
+    public void setCurr(int curr) {
+        Curr = curr;
+    }
+
+    public void setLobbySign(EventLocation lobbySign) {
+        LobbySign = lobbySign;
+    }
+
+    public void setGm(Gamemode gm) {
+        this.gm = gm;
+    }
+
+    public void setGmType(String gmType) {
+        this.gmType = gmType;
+    }
+
+    public void setSpawn(EventLocation spawn) {
+        Spawn = spawn;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setImportantPoints(HashMap<String, EventLocation> importantPoints) {
+        ImportantPoints = importantPoints;
+    }
+
+    public void setSpawnPoints(ArrayList<EventLocation> spawnPoints) {
+        this.spawnPoints = spawnPoints;
+    }
+
+    public void setRegionPoints(ArrayList<EventLocation> regionPoints) {
+        this.regionPoints = regionPoints;
+    }
+
+    public void setResourcePackURL(String resourcePackURL) {
+        this.resourcePackURL = resourcePackURL;
+    }
+    //    @JsonIgnore
 //    public void setRp(String rp){
 //        this.rp = rp;
 //    }

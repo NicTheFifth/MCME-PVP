@@ -18,28 +18,24 @@
  */
 package com.mcmiddleearth.mcme.events.PVP;
 
-import com.mcmiddleearth.mcme.events.PVP.maps.MapEditor;
-import com.mcmiddleearth.mcme.events.PVP.maps.Map;
 import com.mcmiddleearth.mcme.events.Event;
 import com.mcmiddleearth.mcme.events.Main;
 import com.mcmiddleearth.mcme.events.PVP.Gamemode.anticheat.AntiCheatListeners;
-import com.mcmiddleearth.mcme.events.PVP.Handlers.AllGameHandlers;
-import com.mcmiddleearth.mcme.events.PVP.Handlers.BukkitTeamHandler;
-import com.mcmiddleearth.mcme.events.PVP.Handlers.ChatHandler;
+import com.mcmiddleearth.mcme.events.PVP.Handlers.*;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.GearHandler.GearEvents;
-import com.mcmiddleearth.mcme.events.PVP.Handlers.JoinLeaveHandler;
-import com.mcmiddleearth.mcme.events.PVP.Handlers.WeatherHandler;
+import com.mcmiddleearth.mcme.events.PVP.maps.Map;
+import com.mcmiddleearth.mcme.events.PVP.maps.MapEditor;
 import com.mcmiddleearth.mcme.events.Util.CLog;
 import com.mcmiddleearth.mcme.events.Util.DBmanager;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map.Entry;
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 /**
  *
@@ -47,16 +43,10 @@ import org.bukkit.plugin.PluginManager;
  */
 public class PVPCore implements Event{
     
-    @Getter
     private static File saveLoc = new File(Main.getPluginDirectory() + Main.getFileSep() + "PVP");
-    
-    @Getter
     private static Location Spawn;
-    
-    @Getter
     private static int countdownTime = 5;
-    
-    
+
     @Override
     public void onEnable(){
         File loc = new File(saveLoc + Main.getFileSep() + "Maps");
@@ -134,5 +124,17 @@ public class PVPCore implements Event{
             return null;
         }
         return (WorldEditPlugin) p;
+    }
+
+    public static File getSaveLoc() {
+        return saveLoc;
+    }
+
+    public static Location getSpawn() {
+        return Spawn;
+    }
+
+    public static int getCountdownTime() {
+        return countdownTime;
     }
 }

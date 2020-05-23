@@ -26,25 +26,22 @@ import com.mcmiddleearth.mcme.events.PVP.Handlers.BukkitTeamHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.ChatHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.CommandBlockHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.GearHandler;
-import com.mcmiddleearth.mcme.events.PVP.Handlers.JoinLeaveHandler;
 import com.mcmiddleearth.mcme.events.PVP.maps.Map;
 import com.mcmiddleearth.mcme.events.PVP.maps.MapEditor;
 import com.mcmiddleearth.mcme.events.Permissions;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Logger;
-import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.GameMode;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -52,10 +49,8 @@ import org.bukkit.GameMode;
  */
 public class PVPCommandCore implements CommandExecutor {
     
-    @Getter @Setter
     protected static Map queuedGame = null;
     
-    @Getter @Setter
     protected static Map runningGame = null;
     
     protected int parameter;
@@ -594,6 +589,21 @@ public class PVPCommandCore implements CommandExecutor {
             return true;
         }
 
+    public static Map getQueuedGame() {
+        return queuedGame;
+    }
+
+    public static Map getRunningGame() {
+        return runningGame;
+    }
+
+    public static void setQueuedGame(Map queuedGame) {
+        PVPCommandCore.queuedGame = queuedGame;
+    }
+
+    public static void setRunningGame(Map runningGame) {
+        PVPCommandCore.runningGame = runningGame;
+    }
 }
 
                 

@@ -21,23 +21,21 @@ package com.mcmiddleearth.mcme.events.PVP;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mcmiddleearth.mcme.events.Main;
-import com.mcmiddleearth.mcme.events.Util.DBmanager;
-import com.mcmiddleearth.mcme.events.PVP.Gamemode.Gamemode;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.JoinLeaveHandler;
 import com.mcmiddleearth.mcme.events.PVP.Team.Teams;
+import com.mcmiddleearth.mcme.events.Util.DBmanager;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lombok.Getter;
-import lombok.Setter;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
 
 /**
  *
@@ -45,31 +43,16 @@ import org.bukkit.event.entity.PlayerDeathEvent;
  */
 public class PlayerStat {
     
-    @Getter
     private ArrayList<String> playersKilled = new ArrayList<String>();
-    
-    @Getter @Setter
     private int Kills = 0;
-    
-    @Getter @Setter
     private int Deaths = 0;
-    
-    @Getter @Setter
     private int gamesPlayed = 0;
-    
-    @Getter @Setter
     private int gamesWon = 0;
-    
-    @Getter @Setter
     private int gamesLost = 0;
-    
-    @Getter @Setter
     private int gamesSpectated = 0;
-    
-    @Getter @Setter
     private static HashMap<String, PlayerStat> playerStats = new HashMap<>();
     
-    @Getter @Setter @JsonIgnore    
+    @JsonIgnore
     private UUID uuid;
     
     public PlayerStat(){}
@@ -196,5 +179,73 @@ public class PlayerStat {
                 }
             }
         }
+    }
+
+    public ArrayList<String> getPlayersKilled() {
+        return playersKilled;
+    }
+
+    public int getKills() {
+        return Kills;
+    }
+
+    public void setKills(int kills) {
+        Kills = kills;
+    }
+
+    public int getDeaths() {
+        return Deaths;
+    }
+
+    public void setDeaths(int deaths) {
+        Deaths = deaths;
+    }
+
+    public int getGamesPlayed() {
+        return gamesPlayed;
+    }
+
+    public void setGamesPlayed(int gamesPlayed) {
+        this.gamesPlayed = gamesPlayed;
+    }
+
+    public int getGamesWon() {
+        return gamesWon;
+    }
+
+    public void setGamesWon(int gamesWon) {
+        this.gamesWon = gamesWon;
+    }
+
+    public int getGamesLost() {
+        return gamesLost;
+    }
+
+    public void setGamesLost(int gamesLost) {
+        this.gamesLost = gamesLost;
+    }
+
+    public int getGamesSpectated() {
+        return gamesSpectated;
+    }
+
+    public void setGamesSpectated(int gamesSpectated) {
+        this.gamesSpectated = gamesSpectated;
+    }
+
+    public static HashMap<String, PlayerStat> getPlayerStats() {
+        return playerStats;
+    }
+
+    public static void setPlayerStats(HashMap<String, PlayerStat> playerStats) {
+        PlayerStat.playerStats = playerStats;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 }

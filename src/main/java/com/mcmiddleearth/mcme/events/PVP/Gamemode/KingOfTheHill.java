@@ -18,25 +18,14 @@
  */
 package com.mcmiddleearth.mcme.events.PVP.Gamemode;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mcmiddleearth.mcme.events.Main;
-import com.mcmiddleearth.mcme.events.PVP.Handlers.ChatHandler;
-import com.mcmiddleearth.mcme.events.PVP.maps.Map;
-import com.mcmiddleearth.mcme.events.PVP.PVPCore;
 import com.mcmiddleearth.mcme.events.PVP.Team;
-import com.mcmiddleearth.mcme.events.PVP.Team.Teams;
-import com.mcmiddleearth.mcme.events.Util.EventLocation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import lombok.Getter;
+import com.mcmiddleearth.mcme.events.PVP.maps.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -46,8 +35,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  *
@@ -55,13 +46,10 @@ import org.bukkit.scoreboard.ScoreboardManager;
  */
 public class KingOfTheHill extends BasePluginGamemode{
     
-    @Getter
     private Objective Points;
     
-    @Getter
     private int target = 50;
     
-    @Getter
     private final ArrayList<String> NeededPoints = new ArrayList<String>(Arrays.asList(new String[] {
         "RedSpawn",
         "BlueSpawn",
@@ -72,10 +60,8 @@ public class KingOfTheHill extends BasePluginGamemode{
     
     int count = 10;
     
-    @Getter
     private boolean midgameJoin = false;
     
-    @Getter
     private GameState state;
     
     GameEvents events;
@@ -302,5 +288,28 @@ public class KingOfTheHill extends BasePluginGamemode{
                 }
             }
         }
+    }
+
+    public Objective getPoints() {
+        return Points;
+    }
+
+    public int getTarget() {
+        return target;
+    }
+
+    @Override
+    public ArrayList<String> getNeededPoints() {
+        return NeededPoints;
+    }
+
+    @Override
+    public boolean isMidgameJoin() {
+        return midgameJoin;
+    }
+
+    @Override
+    public GameState getState() {
+        return state;
     }
 }

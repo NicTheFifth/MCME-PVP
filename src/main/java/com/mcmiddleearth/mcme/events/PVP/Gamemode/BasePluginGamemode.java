@@ -23,36 +23,36 @@ import com.mcmiddleearth.mcme.events.Main;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.ArrowHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.BukkitTeamHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.ChatHandler;
-import com.mcmiddleearth.mcme.events.PVP.maps.Map;
 import com.mcmiddleearth.mcme.events.PVP.PVPCommandCore;
 import com.mcmiddleearth.mcme.events.PVP.PVPCore;
 import com.mcmiddleearth.mcme.events.PVP.PlayerStat;
 import com.mcmiddleearth.mcme.events.PVP.Team;
-import java.util.ArrayList;
-import lombok.Getter;
+import com.mcmiddleearth.mcme.events.PVP.maps.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Arrow;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+
+import java.util.ArrayList;
 
 /**
  *
  * @author donoa_000
  */
 public abstract class BasePluginGamemode implements Gamemode{
-    @Getter @JsonIgnore
+
+    @JsonIgnore
     ArrayList<Player> players = new ArrayList<>();
     
     public enum GameState {
         IDLE, COUNTDOWN, RUNNING
     }
     
-    @Getter
     private static Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
     
     public void playerLeave(Player p){
@@ -165,5 +165,14 @@ public abstract class BasePluginGamemode implements Gamemode{
         }
         
         return true;
+    }
+
+    @Override
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+
+    public static Scoreboard getScoreboard() {
+        return scoreboard;
     }
 }

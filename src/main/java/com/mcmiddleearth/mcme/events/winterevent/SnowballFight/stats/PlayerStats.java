@@ -25,8 +25,6 @@ package com.mcmiddleearth.mcme.events.winterevent.SnowballFight.stats;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mcmiddleearth.mcme.events.Main;
-import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -34,20 +32,10 @@ import java.io.IOException;
 
 public class PlayerStats {
 
-    @Getter
-    @Setter
     private String playerUUID;
-    @Getter
-    @Setter
     private String playerName;
-    @Getter
-    @Setter
     private int thrown = 0;
-    @Getter
-    @Setter
     private int hitOthers = 0;
-    @Getter
-    @Setter
     private int hitSelf = 0;
 
     public PlayerStats(Player player) {
@@ -132,5 +120,45 @@ public class PlayerStats {
     @JsonIgnore
     public File getFileLocation() {
         return new File(Main.getPlayerDirectory(), playerUUID + ".snowball");
+    }
+
+    public String getPlayerUUID() {
+        return playerUUID;
+    }
+
+    public void setPlayerUUID(String playerUUID) {
+        this.playerUUID = playerUUID;
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
+    public int getThrown() {
+        return thrown;
+    }
+
+    public void setThrown(int thrown) {
+        this.thrown = thrown;
+    }
+
+    public int getHitOthers() {
+        return hitOthers;
+    }
+
+    public void setHitOthers(int hitOthers) {
+        this.hitOthers = hitOthers;
+    }
+
+    public int getHitSelf() {
+        return hitSelf;
+    }
+
+    public void setHitSelf(int hitSelf) {
+        this.hitSelf = hitSelf;
     }
 }

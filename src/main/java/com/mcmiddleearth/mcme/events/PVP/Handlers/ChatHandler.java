@@ -19,8 +19,6 @@
 package com.mcmiddleearth.mcme.events.PVP.Handlers;
 
 import com.mcmiddleearth.mcme.events.Permissions;
-import java.util.HashMap;
-import lombok.Getter;
 import me.clip.placeholderapi.PlaceholderHook;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -28,16 +26,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import java.util.HashMap;
+
 /**
  *
  * @author Donovan <dallen@dallen.xyz>
  */
 public class ChatHandler extends PlaceholderHook implements Listener {
     
-    @Getter
     private static HashMap<String, String> playerPrefixes = new HashMap<String, String>();
     
-    @Getter
     private static HashMap<String, ChatColor> playerColors = new HashMap<String, ChatColor>();
     
     public static String formatChat(Player p){
@@ -87,4 +85,11 @@ public class ChatHandler extends PlaceholderHook implements Listener {
         return "";
     }
 
+    public static HashMap<String, String> getPlayerPrefixes() {
+        return playerPrefixes;
+    }
+
+    public static HashMap<String, ChatColor> getPlayerColors() {
+        return playerColors;
+    }
 }

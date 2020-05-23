@@ -19,22 +19,17 @@
 package com.mcmiddleearth.mcme.events.winterevent.SnowManInvasion;
 
 import com.mcmiddleearth.mcme.events.winterevent.SnowManInvasion.Snowman.InvasionSnowman;
-import java.awt.geom.Ellipse2D;
+import org.bukkit.Location;
+
 import java.util.ArrayList;
 import java.util.Random;
-import lombok.Getter;
-import lombok.Setter;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 
 /**
  *
  * @author Donovan
  */
 public class SpawnPoint {
-    @Getter @Setter
     Location center;
-    @Getter @Setter
     int Radius;
     
     public SpawnPoint(Location l, int r){
@@ -54,5 +49,21 @@ public class SpawnPoint {
             rtn.add(is);
         }
         return rtn;
+    }
+
+    public Location getCenter() {
+        return center;
+    }
+
+    public void setCenter(Location center) {
+        this.center = center;
+    }
+
+    public int getRadius() {
+        return Radius;
+    }
+
+    public void setRadius(int radius) {
+        Radius = radius;
     }
 }

@@ -19,8 +19,6 @@
 package com.mcmiddleearth.mcme.events.PVP;
 
 import com.mcmiddleearth.mcme.events.PVP.maps.Map;
-import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
@@ -36,7 +34,6 @@ import org.bukkit.inventory.meta.ItemMeta;
  * @author Donovan <dallen@dallen.xyz>
  */
 public class Lobby {
-    @Getter @Setter
     private static String world;
     
     public Lobby(){}
@@ -90,5 +87,12 @@ public class Lobby {
             }
         }
     }
-    
+
+    public static String getWorld() {
+        return world;
+    }
+
+    public static void setWorld(String world) {
+        Lobby.world = world;
+    }
 }

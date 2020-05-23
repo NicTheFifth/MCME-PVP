@@ -21,20 +21,13 @@ package com.mcmiddleearth.mcme.events.PVP.Gamemode.Siege;
 import com.mcmiddleearth.mcme.events.Main;
 import com.mcmiddleearth.mcme.events.PVP.Gamemode.BasePluginGamemode;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.GearHandler;
-import com.mcmiddleearth.mcme.events.PVP.PVPCommandCore;
 import com.mcmiddleearth.mcme.events.PVP.PVPCore;
 import com.mcmiddleearth.mcme.events.PVP.PlayerStat;
 import com.mcmiddleearth.mcme.events.PVP.Team;
 import com.mcmiddleearth.mcme.events.PVP.maps.Map;
 import com.mcmiddleearth.mcme.events.Util.EventLocation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Random;
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -49,7 +42,10 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  *
@@ -59,7 +55,6 @@ public class Siege extends BasePluginGamemode{
     
     private boolean eventsRegistered = false;
     
-    @Getter
     private final ArrayList<String> NeededPoints = new ArrayList<String>(Arrays.asList(new String[] {
         "RedSpawn",
         "BlueSpawn",
@@ -72,10 +67,8 @@ public class Siege extends BasePluginGamemode{
     
     private int count;
     
-    @Getter
     private boolean midgameJoin = true;
     
-    @Getter
     private GameState state;
     
     private GameEvents events;
@@ -348,5 +341,20 @@ public class Siege extends BasePluginGamemode{
     public boolean midgamePlayerJoin (Player p){
             
        return false;
-    }    
+    }
+
+    @Override
+    public ArrayList<String> getNeededPoints() {
+        return NeededPoints;
+    }
+
+    @Override
+    public boolean isMidgameJoin() {
+        return midgameJoin;
+    }
+
+    @Override
+    public GameState getState() {
+        return state;
+    }
 }

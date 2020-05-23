@@ -20,10 +20,10 @@ package com.mcmiddleearth.mcme.events.Util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mcmiddleearth.mcme.events.Main;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import lombok.Getter;
 
 /**
  *
@@ -31,7 +31,6 @@ import lombok.Getter;
  */
 public class DBmanager {
     
-    @Getter
     private static ObjectMapper JSonParser = new ObjectMapper();
     
     public static boolean saveObj(Object obj, File loc, String name){
@@ -97,5 +96,9 @@ public class DBmanager {
             rtn.put(f.getName(), loadObj(Type, f));
         }
         return rtn;
+    }
+
+    public static ObjectMapper getJSonParser() {
+        return JSonParser;
     }
 }

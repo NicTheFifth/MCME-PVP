@@ -22,18 +22,12 @@ import com.mcmiddleearth.mcme.events.Main;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.GearHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.GearHandler.SpecialGear;
 import com.mcmiddleearth.mcme.events.PVP.PVPCommandCore;
-import com.mcmiddleearth.mcme.events.PVP.maps.Map;
 import com.mcmiddleearth.mcme.events.PVP.PVPCore;
 import com.mcmiddleearth.mcme.events.PVP.PlayerStat;
-import com.mcmiddleearth.mcme.events.Util.EventLocation;
 import com.mcmiddleearth.mcme.events.PVP.Team;
 import com.mcmiddleearth.mcme.events.PVP.Team.Teams;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.Random;
-import lombok.Getter;
+import com.mcmiddleearth.mcme.events.PVP.maps.Map;
+import com.mcmiddleearth.mcme.events.Util.EventLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -52,6 +46,12 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Random;
+
 /**
  *
  * @author Donovan <dallen@dallen.xyz>
@@ -59,10 +59,8 @@ import org.bukkit.scoreboard.Objective;
 
 public class TeamConquest extends BasePluginGamemode {//Handled by plugin, should be done needs testing
     
-    @Getter
     private Objective Points;
     
-    @Getter
     private final int target = 100;
     
     private final int midgameJoinPointThreshold = 20;
@@ -73,7 +71,6 @@ public class TeamConquest extends BasePluginGamemode {//Handled by plugin, shoul
     
     private boolean eventsRegistered = false;
     
-    @Getter
     private final ArrayList<String> NeededPoints = new ArrayList<String>(Arrays.asList(new String[] {
         "RedSpawn",
         "BlueSpawn",
@@ -86,10 +83,8 @@ public class TeamConquest extends BasePluginGamemode {//Handled by plugin, shoul
     
     private int count;
     
-    @Getter
     private boolean midgameJoin = true;
     
-    @Getter
     private GameState state;
     
     private GameEvents events;
@@ -471,5 +466,28 @@ public class TeamConquest extends BasePluginGamemode {//Handled by plugin, shoul
             p.teleport(map.getImportantPoints().get("BlueSpawn").toBukkitLoc().add(0, 2, 0));
             GearHandler.giveGear(p, ChatColor.BLUE, SpecialGear.NONE);
         }
+    }
+
+    public Objective getPoints() {
+        return Points;
+    }
+
+    public int getTarget() {
+        return target;
+    }
+
+    @Override
+    public ArrayList<String> getNeededPoints() {
+        return NeededPoints;
+    }
+
+    @Override
+    public boolean isMidgameJoin() {
+        return midgameJoin;
+    }
+
+    @Override
+    public GameState getState() {
+        return state;
     }
 }

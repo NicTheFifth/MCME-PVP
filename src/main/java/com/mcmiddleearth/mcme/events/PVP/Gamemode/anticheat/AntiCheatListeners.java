@@ -20,8 +20,6 @@ package com.mcmiddleearth.mcme.events.PVP.Gamemode.anticheat;
 
 import com.mcmiddleearth.mcme.events.PVP.PVPCommandCore;
 import com.mcmiddleearth.mcme.events.PVP.Team;
-import java.util.HashMap;
-import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,6 +28,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+
+import java.util.HashMap;
 
 /**
  *
@@ -199,9 +199,12 @@ public class AntiCheatListeners implements Listener{
         
     }*/
     
-    @Getter
     private static HashMap<String, Long> lastInteract = new HashMap<>();
-    
+
+    public static HashMap<String, Long> getLastInteract() {
+        return lastInteract;
+    }
+
     @EventHandler
     public static void onPlayerClick(PlayerInteractEvent e){
         

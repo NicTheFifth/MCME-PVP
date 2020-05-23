@@ -18,50 +18,33 @@
  */
 package com.mcmiddleearth.mcme.events.PVP.Gamemode;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mcmiddleearth.mcme.events.Main;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.BukkitTeamHandler;
-import com.mcmiddleearth.mcme.events.PVP.Handlers.ChatHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.GearHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.GearHandler.SpecialGear;
-import com.mcmiddleearth.mcme.events.PVP.maps.Map;
 import com.mcmiddleearth.mcme.events.PVP.PVPCore;
 import com.mcmiddleearth.mcme.events.PVP.PlayerStat;
 import com.mcmiddleearth.mcme.events.PVP.Team;
 import com.mcmiddleearth.mcme.events.PVP.Team.Teams;
-import com.mcmiddleearth.mcme.events.Util.EventLocation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Random;
-import lombok.Getter;
-import lombok.Setter;
+import com.mcmiddleearth.mcme.events.PVP.maps.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
 
 /**
  *
@@ -69,10 +52,8 @@ import org.bukkit.scoreboard.ScoreboardManager;
  */
 public class Ringbearer extends BasePluginGamemode{//Handled by plugin 
     
-    @Getter
     private final int target = 100;
     
-    @Getter
     private final ArrayList<String> NeededPoints = new ArrayList<String>(Arrays.asList(new String[] {
         "RedSpawn",
         "BlueSpawn",
@@ -82,18 +63,15 @@ public class Ringbearer extends BasePluginGamemode{//Handled by plugin
     
     private int count;
     
-    @Getter
     private GameState state;
     
     boolean hasTeams = false;
     
-    @Getter
     private Player redBearer = null;
     
     private boolean redCanRespawn;
     private boolean redBearerHasRespawned;
     
-    @Getter
     private Player blueBearer = null;
     
     private boolean blueCanRespawn;
@@ -525,5 +503,27 @@ public class Ringbearer extends BasePluginGamemode{//Handled by plugin
                 }
             }
         }
+    }
+
+    public int getTarget() {
+        return target;
+    }
+
+    @Override
+    public ArrayList<String> getNeededPoints() {
+        return NeededPoints;
+    }
+
+    @Override
+    public GameState getState() {
+        return state;
+    }
+
+    public Player getRedBearer() {
+        return redBearer;
+    }
+
+    public Player getBlueBearer() {
+        return blueBearer;
     }
 }

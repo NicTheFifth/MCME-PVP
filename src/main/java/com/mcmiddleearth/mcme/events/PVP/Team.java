@@ -20,15 +20,14 @@ package com.mcmiddleearth.mcme.events.PVP;
 
 import com.mcmiddleearth.mcme.events.PVP.Handlers.BukkitTeamHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.ChatHandler;
-import java.util.ArrayList;
-import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.entity.Player;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.ArrayList;
 
 /**
  *
@@ -36,34 +35,16 @@ import org.bukkit.potion.PotionEffectType;
  */
 public class Team { 
     
-        @Getter
         private ArrayList<Location> capturedPoints = new ArrayList<>();
-        
-        @Getter
         private ArrayList<Player> members = new ArrayList<>();
-        
-        @Getter
         private ArrayList<Player> allMembers = new ArrayList<>();
-        
         private String prefix;
-        
         private ChatColor color;
-        
         private Teams t;
-        
-        @Getter
         private static Team red = new Team("Red", org.bukkit.ChatColor.RED, Teams.RED);
-
-        @Getter
         private static Team blue = new Team("Blue", org.bukkit.ChatColor.BLUE, Teams.BLUE);
-
-        @Getter
         private static Team spectator = new Team("Spectator", org.bukkit.ChatColor.GRAY, Teams.SPECTATORS);
-
-        @Getter
         private static Team survivor = new Team("Survivor", org.bukkit.ChatColor.BLUE, Teams.SURVIVORS);
-
-        @Getter
         private static Team infected = new Team("Infected", org.bukkit.ChatColor.DARK_RED, Teams.INFECTED);
         
         public Team(String prefix, ChatColor color, Teams t){
@@ -205,5 +186,36 @@ public class Team {
         infected.getAllMembers().clear();
         
     }
-    
+
+    public ArrayList<Location> getCapturedPoints() {
+        return capturedPoints;
+    }
+
+    public ArrayList<Player> getMembers() {
+        return members;
+    }
+
+    public ArrayList<Player> getAllMembers() {
+        return allMembers;
+    }
+
+    public static Team getRed() {
+        return red;
+    }
+
+    public static Team getBlue() {
+        return blue;
+    }
+
+    public static Team getSpectator() {
+        return spectator;
+    }
+
+    public static Team getSurvivor() {
+        return survivor;
+    }
+
+    public static Team getInfected() {
+        return infected;
+    }
 }

@@ -18,8 +18,6 @@
  */
 package com.mcmiddleearth.mcme.events.Util;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -29,16 +27,12 @@ import org.bukkit.Location;
  */
 public class EventLocation {
     
-    @Getter @Setter
     private int X;
     
-    @Getter @Setter
     private int Y;
     
-    @Getter @Setter
     private int Z;
     
-    @Getter @Setter
     private String World;
     
     public EventLocation(){}
@@ -52,5 +46,37 @@ public class EventLocation {
     
     public Location toBukkitLoc(){
         return new Location(Bukkit.getWorld(World), X, Y, Z);
+    }
+
+    public int getX() {
+        return X;
+    }
+
+    public void setX(int x) {
+        X = x;
+    }
+
+    public int getY() {
+        return Y;
+    }
+
+    public void setY(int y) {
+        Y = y;
+    }
+
+    public int getZ() {
+        return Z;
+    }
+
+    public void setZ(int z) {
+        Z = z;
+    }
+
+    public String getWorld() {
+        return World;
+    }
+
+    public void setWorld(String world) {
+        World = world;
     }
 }

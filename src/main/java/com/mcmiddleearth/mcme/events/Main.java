@@ -26,13 +26,8 @@ import com.mcmiddleearth.mcme.events.summerevent.SummerCommands;
 import com.mcmiddleearth.mcme.events.summerevent.SummerCore;
 import com.mcmiddleearth.mcme.events.winterevent.SnowManInvasion.EventHandles.SignListener;
 import com.mcmiddleearth.mcme.events.winterevent.SnowManInvasion.EventHandles.SnowballHandle;
-import com.mcmiddleearth.mcme.events.winterevent.WinterCommands;
 import com.mcmiddleearth.mcme.events.winterevent.SnowballFight.listeners.SnowballListener;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import lombok.Getter;
+import com.mcmiddleearth.mcme.events.winterevent.WinterCommands;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -40,46 +35,28 @@ import org.bukkit.WorldCreator;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Donovan
  */
 public class Main extends JavaPlugin{
     
-    @Getter
     private static boolean debug = true;
-    
-    @Getter
     private static SummerCore summerCore = new SummerCore();
-    
-    @Getter
     private static PVPCore PVPCore;
-    
-    @Getter
     private static Main plugin;
-    
-    @Getter
     private String spawnWorld;
-    
-    @Getter
     private static String FileSep = System.getProperty("file.separator");
-    
-    @Getter
     private ArrayList<String> noHunger = new ArrayList<String>();
-    
-    @Getter
     private static ObjectMapper objectMapper = new ObjectMapper();
-    
-    @Getter
     private static Server serverInstance;
-    
-    @Getter
     private static File pluginDirectory;
-    
-    @Getter
     private static File playerDirectory;
-    
-    @Getter
     private static boolean blockprotect = false;
     
     @Override
@@ -166,5 +143,53 @@ public class Main extends JavaPlugin{
             pm.registerEvents(new SignListener(), this);
             pm.registerEvents(new SnowballHandle(), this);
         }
+    }
+
+    public static boolean isDebug() {
+        return debug;
+    }
+
+    public static SummerCore getSummerCore() {
+        return summerCore;
+    }
+
+    public static com.mcmiddleearth.mcme.events.PVP.PVPCore getPVPCore() {
+        return PVPCore;
+    }
+
+    public static Main getPlugin() {
+        return plugin;
+    }
+
+    public String getSpawnWorld() {
+        return spawnWorld;
+    }
+
+    public static String getFileSep() {
+        return FileSep;
+    }
+
+    public ArrayList<String> getNoHunger() {
+        return noHunger;
+    }
+
+    public static ObjectMapper getObjectMapper() {
+        return objectMapper;
+    }
+
+    public static Server getServerInstance() {
+        return serverInstance;
+    }
+
+    public static File getPluginDirectory() {
+        return pluginDirectory;
+    }
+
+    public static File getPlayerDirectory() {
+        return playerDirectory;
+    }
+
+    public static boolean isBlockprotect() {
+        return blockprotect;
     }
 }

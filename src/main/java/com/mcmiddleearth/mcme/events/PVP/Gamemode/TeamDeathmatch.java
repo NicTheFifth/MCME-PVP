@@ -19,24 +19,16 @@
 package com.mcmiddleearth.mcme.events.PVP.Gamemode;
 
 import com.mcmiddleearth.mcme.events.Main;
-import com.mcmiddleearth.mcme.events.PVP.Handlers.ChatHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.GearHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.GearHandler.SpecialGear;
-import com.mcmiddleearth.mcme.events.PVP.maps.Map;
 import com.mcmiddleearth.mcme.events.PVP.PVPCore;
 import com.mcmiddleearth.mcme.events.PVP.PlayerStat;
 import com.mcmiddleearth.mcme.events.PVP.Team;
 import com.mcmiddleearth.mcme.events.PVP.Team.Teams;
-import java.util.ArrayList;
-import java.util.Arrays;
-import lombok.Getter;
+import com.mcmiddleearth.mcme.events.PVP.maps.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.enchantments.EnchantmentWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -44,12 +36,12 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -59,24 +51,18 @@ public class TeamDeathmatch extends BasePluginGamemode{
     
     private boolean eventsRegistered = false;
     
-    @Getter
     private final ArrayList<String> NeededPoints = new ArrayList<String>(Arrays.asList(new String[] {
         "RedSpawn",
         "BlueSpawn",
     }));
     
-    @Getter
     private GameState state;
     
     Map map;
     
     private int count;
-    
-    @Getter
     private Objective Points;
-    
     private GameEvents events;
-    
     private int startingRedNum;
     private int startingBlueNum;
     
@@ -326,5 +312,19 @@ public class TeamDeathmatch extends BasePluginGamemode{
             Points.getScore(ChatColor.BLUE + "Blue:").setScore(Points.getScore(ChatColor.BLUE + "Blue:").getScore() + 1);
             GearHandler.giveGear(p, ChatColor.BLUE, SpecialGear.NONE);
         }
+    }
+
+    @Override
+    public ArrayList<String> getNeededPoints() {
+        return NeededPoints;
+    }
+
+    @Override
+    public GameState getState() {
+        return state;
+    }
+
+    public Objective getPoints() {
+        return Points;
     }
 }

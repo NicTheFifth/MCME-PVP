@@ -16,13 +16,13 @@
  */
 package com.mcmiddleearth.mcme.events;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -33,15 +33,12 @@ public enum Permissions {
     LOCKER               ("mcmeevent.pvp.locker",            PermissionDefault.OP),
     PVP_MANAGER            ("mcmeevent.pvp.manager",           PermissionDefault.OP),
     PVP_ADMIN            ("mcmeevent.pvp.admin",           PermissionDefault.OP);
-    
-    
-    @Getter
+
+
     private final String permissionNode;
     
-    @Getter
     private final Permissions[] children;
     
-    @Getter
     private final PermissionDefault defaultPerm;
 
     private Permissions(String permissionNode, PermissionDefault defaultPerm, Permissions... children) {
@@ -69,4 +66,18 @@ public enum Permissions {
 //Logger.getGlobal().info("register: "+bukkitPerm.getName());
         }
     }
+
+    public String getPermissionNode() {
+        return permissionNode;
+    }
+
+    public Permissions[] getChildren() {
+        return children;
+    }
+
+    public PermissionDefault getDefaultPerm() {
+        return defaultPerm;
+    }
+
+
 }
