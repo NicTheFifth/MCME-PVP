@@ -119,7 +119,7 @@ public abstract class BasePluginGamemode implements Gamemode{
                 p.setHealth(20);
             }
         }
-        for(Arrow arrow : p.getWorld().getEntitiesByClass(Arrow.class)) {
+        for(Arrow arrow : Bukkit.getWorld(m.getSpawn().getWorld()).getEntitiesByClass(Arrow.class)) {
             arrow.remove();
         }
     }

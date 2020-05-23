@@ -203,7 +203,7 @@ public class PVPCommandCore implements CommandExecutor {
                         arguments.add("test");
                     }
                 }
-            } if (args.length <= 1 && arguments.length != 0){
+            } if (args.length <= 1 && arguments.size != 0){
                 for (String s : arguments) {
                     if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
                         Flist.add(s);
