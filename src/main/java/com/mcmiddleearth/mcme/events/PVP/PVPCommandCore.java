@@ -133,9 +133,10 @@ public class PVPCommandCore implements CommandExecutor {
         return false;
     }
 
-    public List<String> onTabComplete(CommandSender cs, Command cmnd, String label, String[] args){
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args){
         List<String> arguments = new ArrayList<>();
-        Player p = (Player) cs;
+        List<String> Flist = new ArrayList<>();
+        Player p = (Player) sender;
         if (cmd.getName().equalsIgnoreCase("pvp")) {
             if (args.Length == 1) {
                 arguments.add("join");
@@ -199,7 +200,7 @@ public class PVPCommandCore implements CommandExecutor {
                         arguments.add("test");
                     }
                 }
-            } if (args.length =<1 && arguments.length != 0){
+            } if (args.length <= 1 && arguments.length != 0){
                 for (String s : arguments) {
                     if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
                         Flist.add(s);
@@ -325,9 +326,7 @@ public class PVPCommandCore implements CommandExecutor {
                             int newParam = Integer.parseInt(args[3]);
                             if(newParam < 1 ) {
                                sender.sendMessage(ChatColor.Gray + "Parameter is not allowed to be this value.");
-                               break;
-                            }
-                            else if(queuedGame == null) {
+                            } else if(queuedGame == null) {
                                 parameter = newParam;
                                 sender.sendMessage("Map: " + m.getTitle() + ", Gamemode: " + m.getGmType());
                                 sendBroadcast((Player)sender,m,args);
@@ -341,8 +340,7 @@ public class PVPCommandCore implements CommandExecutor {
 
                                 }*/
                                 queuedGame = m;
-                            }
-                            else if(queuedGame == m && newParam != parameter) {
+                            } else if(queuedGame == m && newParam != parameter) {
                                     sender.sendMessage(ChatColor.GRAY + "Parameter changed from " + ChatColor.GREEN + parameter + ChatColor.GRAY + " to " + ChatColor.GREEN + newParam);
                                     parameter = newParam;
                             }
@@ -354,8 +352,7 @@ public class PVPCommandCore implements CommandExecutor {
                        catch(NumberFormatException ex) {
                                sender.sendMessage(ChatColor.RED + "The parameter value must be an integer");
                        }
-                    }
-                    else{
+                    } else{
                         parameter = 0;
                         sender.sendMessage("Map: " + m.getTitle() + ", Gamemode: " + m.getGmType());
                         sendBroadcast((Player)sender,m,args);
@@ -509,7 +506,7 @@ public class PVPCommandCore implements CommandExecutor {
             //    p.kickPlayer("<3 -Dallen");
             //}
         }
-        p.setGameMode(GameMode.CREATIVE;
+        p.setGameMode(GameMode.CREATIVE);
         p.setGameMode(GameMode.SURVIVAL);
         return true;
 	}

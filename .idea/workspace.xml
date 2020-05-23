@@ -25,7 +25,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9db05995-4421-4e0a-a74d-35d406cc9b5d" name="Default Changelist" comment="Variable lower than 0 fix. Extra commands for spectators blocked. Ringbearer ring invisibility fixed. Fly issue resolved? Arrows being removed after game is over." />
+    <list default="true" id="9db05995-4421-4e0a-a74d-35d406cc9b5d" name="Default Changelist" comment="Derpfix">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcmiddleearth/mcme/events/PVP/Locker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mcmiddleearth/mcme/events/PVP/Locker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mcmiddleearth/mcme/events/PVP/PVPCommandCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mcmiddleearth/mcme/events/PVP/PVPCommandCore.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -106,7 +110,14 @@
       <option name="project" value="LOCAL" />
       <updated>1590144504781</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="test">
+      <created>1590239147974</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1590239147995</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -126,7 +137,9 @@
     <MESSAGE value="onTabComplete created." />
     <MESSAGE value="onTabComplete derp fixed." />
     <MESSAGE value="Variable lower than 0 fix. Extra commands for spectators blocked. Ringbearer ring invisibility fixed. Fly issue resolved? Arrows being removed after game is over." />
-    <option name="LAST_COMMIT_MESSAGE" value="Variable lower than 0 fix. Extra commands for spectators blocked. Ringbearer ring invisibility fixed. Fly issue resolved? Arrows being removed after game is over." />
+    <MESSAGE value="test" />
+    <MESSAGE value="Derpfix" />
+    <option name="LAST_COMMIT_MESSAGE" value="Derpfix" />
   </component>
   <component name="WindowStateProjectService">
     <state x="654" y="275" key="#Notifications" timestamp="1590016752794">
