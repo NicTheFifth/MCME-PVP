@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Arrow;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -80,7 +81,7 @@ public abstract class BasePluginGamemode implements Gamemode{
             }
         }*/
         
-    };
+    }
     
     @Override
     public void End(Map m){
@@ -119,10 +120,10 @@ public abstract class BasePluginGamemode implements Gamemode{
                 p.setHealth(20);
             }
         }
-        for(Arrow arrow : p.getWorld().getEntitiesByClass(Arrow.class)) {
+        for(Arrow arrow : Bukkit.getWorld(m.getSpawn().getWorld()).getEntitiesByClass(Arrow.class)) {
             arrow.remove();
         }
-    };
+    }
     
     
     public boolean midgamePlayerJoin(Player p){
@@ -164,5 +165,5 @@ public abstract class BasePluginGamemode implements Gamemode{
         }
         
         return true;
-    };
+    }
 }

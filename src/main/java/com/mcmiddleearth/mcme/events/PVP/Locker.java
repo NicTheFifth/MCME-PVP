@@ -22,6 +22,8 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.mcmiddleearth.mcme.events.Main;
 import com.mcmiddleearth.mcme.events.Permissions;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -90,8 +92,9 @@ public class Locker implements CommandExecutor, Listener{
         }
         return true;
     }
-    public List<String> onTabComplete(CommandSender cs, Command cmnd, String label, String[] args) {
+    public List<String> onTabComplete(CommandSender cs, Command cmd, String label, String[] args) {
         List<String> arguments = new ArrayList<>();
+        List<String> Flist = new ArrayList<>();
         Player p = (Player) cs;
         if (
         cmd.getName().equalsIgnoreCase("locker") && ((p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) || (p.
