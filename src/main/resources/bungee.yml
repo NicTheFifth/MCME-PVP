@@ -1,0 +1,5 @@
+name: PVPBungee
+version: ${project.version}
+main: com.mcmiddleearth.mcme.events.PVP.bungee.PVPBungee
+description: PVP Messaging
+#Copyright (C) 2020 MCME (Fraspace5)
