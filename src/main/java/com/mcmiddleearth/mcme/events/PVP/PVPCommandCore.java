@@ -39,6 +39,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -47,7 +49,7 @@ import java.util.List;
 public class PVPCommandCore implements CommandExecutor, TabCompleter {
     
     protected static Map queuedGame = null;
-    
+
     protected static Map runningGame = null;
     
     protected int parameter;
@@ -130,6 +132,7 @@ public class PVPCommandCore implements CommandExecutor, TabCompleter {
 
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args){
         List<String> arguments = new ArrayList<>();
+        Logger.getLogger(PVPCommandCore.class.getName()).log(Level.INFO, "Call onTabComplete");
         List<String> Flist = new ArrayList<>();
         Player p = (Player) sender;
         if (cmd.getName().equalsIgnoreCase("pvp")) {
@@ -138,11 +141,11 @@ public class PVPCommandCore implements CommandExecutor, TabCompleter {
                 arguments.add("rules");
                 arguments.add("pipe");
                 arguments.add("stats");
-                if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
+                if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
                     arguments.add("map");
                     arguments.add("game");
                     arguments.add("kick");
-                    if(sender.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
+                    if(p.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
                         arguments.add("removegame");
                         arguments.add("togglevoxel");
                         arguments.add("lobby");
@@ -150,60 +153,62 @@ public class PVPCommandCore implements CommandExecutor, TabCompleter {
                 }
             } else if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("map")) {
-                    if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
-                        arguments.add("list");
-                        if (sender.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
-                            arguments.add("<map-name>");
+                    if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
+                        arguments.add(args[0] + " list");
+                        if (p.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
+                            arguments.add(args[0] + " <map-name>");
                         }
                     }
                 } else if (args[0].equalsIgnoreCase("game")) {
-                    if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
-                        arguments.add("quickstart");
-                        arguments.add("start");
-                        arguments.add("end");
-                        arguments.add("getgames");
+                    if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
+                        arguments.add(args[0] + " quickstart");
+                        arguments.add(args[0] + " start");
+                        arguments.add(args[0] + " end");
+                        arguments.add(args[0] + " getgames");
                     }
                 } else if (args[0].equalsIgnoreCase("rules")) {
-                    arguments.add("infected");
-                    arguments.add("oneinthequiver");
-                    arguments.add("ringbearer");
-                    arguments.add("teamslayer");
-                    arguments.add("teamdeathmatch");
-                    arguments.add("teamconquest");
+                    arguments.add(args[0] + " infected");
+                    arguments.add(args[0] + " oneinthequiver");
+                    arguments.add(args[0] + " ringbearer");
+                    arguments.add(args[0] + " teamslayer");
+                    arguments.add(args[0] + " teamdeathmatch");
+                    arguments.add(args[0] + " teamconquest");
                 } else if (args[0].equalsIgnoreCase("stats")) {
-                    if(sender.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
-                        arguments.add("clear");
+                    if(p.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
+                        arguments.add(args[0] + " clear");
                     }
                 } else if (args[0].equalsIgnoreCase("removegame")) {
-                    if (sender.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
-                        arguments.add("<map-name>");
+                    if (p.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
+                        arguments.add(args[0] + " <map-name>");
                     }
                 }
             } else if (args.length == 3) {
                 if (args[0].equalsIgnoreCase("map") && args[1].equalsIgnoreCase("<map-name>")) {
-                    if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
-                        arguments.add("<subcommand>");
+                    if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
+                        arguments.add(args[0] + args[1] + " <subcommand>");
                     }
                 } else if (args[1].equalsIgnoreCase("quickstart")) {
-                    if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
-                        arguments.add("<map-name>");
+                    if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
+                        arguments.add(args[0] + args[1] + " <map-name>");
                     }
                 }
             } else if (args.length == 4) {
                 if (args[1].equalsIgnoreCase("quickstart")) {
-                    if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
-                        arguments.add("test");
+                    if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
+                        arguments.add(args[0] + args[1] + args[2] + " test");
                     }
                 }
-            } if (args.length <= 1 && arguments.size() != 0){
+            }
+            if (args.length <= 1 && arguments.size() != 0) {
                 for (String s : arguments) {
-                    if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
+                    if (s.toLowerCase().startsWith(args[args.length -1].toLowerCase())) {
                         Flist.add(s);
+                        }
                     }
-                }
-                return Flist;
-            } else
-                return null;
+                    return Flist;
+                } else
+                    return null;
+
         } else
             return null;
     }
