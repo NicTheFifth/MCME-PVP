@@ -72,7 +72,7 @@ public class PVPCommandCore implements CommandExecutor, TabCompleter {
                     }
                     else if(args[1].equalsIgnoreCase("getgames") && p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())){
                         return pvpGameGetGames(cs);
-                    }    
+                    }
                 } 
                 else if(args[0].equalsIgnoreCase("join")){
                 	return pvpJoin(p);
@@ -89,7 +89,7 @@ public class PVPCommandCore implements CommandExecutor, TabCompleter {
                     }
                     else if(args[1].equalsIgnoreCase("clear") && (p.hasPermission(Permissions.PVP_ADMIN.getPermissionNode()))){
                         return pvpStatClear();
-                    }   
+                    }
                 }
                 else if(args[0].equalsIgnoreCase("rules")){
                     if(args.length < 2) {
@@ -132,7 +132,6 @@ public class PVPCommandCore implements CommandExecutor, TabCompleter {
 
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args){
         List<String> arguments = new ArrayList<>();
-        Logger.getLogger(PVPCommandCore.class.getName()).log(Level.INFO, "Call onTabComplete");
         List<String> Flist = new ArrayList<>();
         Player p = (Player) sender;
         if (cmd.getName().equalsIgnoreCase("pvp")) {
@@ -149,57 +148,81 @@ public class PVPCommandCore implements CommandExecutor, TabCompleter {
                         arguments.add("removegame");
                         arguments.add("togglevoxel");
                         arguments.add("lobby");
+                        arguments.add("pastemap");
                     }
                 }
             } else if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("map")) {
                     if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
-                        arguments.add(args[0] + " list");
+                        arguments.add("list");
                         if (p.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
-                            arguments.add(args[0] + " <map-name>");
+                            arguments.add("<map-name>");
                         }
                     }
                 } else if (args[0].equalsIgnoreCase("game")) {
                     if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
-                        arguments.add(args[0] + " quickstart");
-                        arguments.add(args[0] + " start");
-                        arguments.add(args[0] + " end");
-                        arguments.add(args[0] + " getgames");
+                        arguments.add("quickstart");
+                        arguments.add("start");
+                        arguments.add("end");
+                        arguments.add("getgames");
                     }
                 } else if (args[0].equalsIgnoreCase("rules")) {
-                    arguments.add(args[0] + " infected");
-                    arguments.add(args[0] + " oneinthequiver");
-                    arguments.add(args[0] + " ringbearer");
-                    arguments.add(args[0] + " teamslayer");
-                    arguments.add(args[0] + " teamdeathmatch");
-                    arguments.add(args[0] + " teamconquest");
+                    arguments.add("infected");
+                    arguments.add("oneinthequiver");
+                    arguments.add("ringbearer");
+                    arguments.add("teamslayer");
+                    arguments.add("teamdeathmatch");
+                    arguments.add("teamconquest");
                 } else if (args[0].equalsIgnoreCase("stats")) {
                     if(p.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
-                        arguments.add(args[0] + " clear");
+                        arguments.add("clear");
                     }
                 } else if (args[0].equalsIgnoreCase("removegame")) {
                     if (p.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
-                        arguments.add(args[0] + " <map-name>");
+                        arguments.add("<map-name>");
                     }
                 }
             } else if (args.length == 3) {
-                if (args[0].equalsIgnoreCase("map") && args[1].equalsIgnoreCase("<map-name>")) {
+                if (args[0].equalsIgnoreCase("map")) {
                     if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
-                        arguments.add(args[0] + args[1] + " <subcommand>");
+                        arguments.add("spawn");
+                        arguments.add("poi");
+                        arguments.add("setMax");
+                        arguments.add("setTitle");
+                        arguments.add("setGamemode");
+                        arguments.add("setArea");
+                        arguments.add("setRP");
                     }
                 } else if (args[1].equalsIgnoreCase("quickstart")) {
                     if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
-                        arguments.add(args[0] + args[1] + " <map-name>");
+                        arguments.add("<map-name>");
                     }
                 }
             } else if (args.length == 4) {
                 if (args[1].equalsIgnoreCase("quickstart")) {
                     if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
-                        arguments.add(args[0] + args[1] + args[2] + " test");
+                        arguments.add("test");
                     }
+                } else if(args[2].equalsIgnoreCase("setgamemode")){
+                    arguments.add("TeamSlayer");
+                    arguments.add("TeamDeathmatch");
+                    arguments.add("FreeForAll");
+                    arguments.add("Infected");
+                    arguments.add("OneInTheQuiver");
+                    arguments.add("Ringbearer");
+                    arguments.add("TeamConquest");
+                    arguments.add("KingOfTheHill");
+                } else if(args[2].equalsIgnoreCase("setrp")) {
+                    arguments.add("eriador");
+                    arguments.add("rohan");
+                    arguments.add("lothlorien");
+                    arguments.add("gondor");
+                    arguments.add("dwarven");
+                    arguments.add("moria");
+                    arguments.add("mordor");
                 }
             }
-            if (args.length <= 1 && arguments.size() != 0) {
+            if (args.length >= 1 && arguments.size() != 0) {
                 for (String s : arguments) {
                     if (s.toLowerCase().startsWith(args[args.length -1].toLowerCase())) {
                         Flist.add(s);
