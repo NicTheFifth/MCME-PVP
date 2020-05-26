@@ -18,16 +18,13 @@ package com.mcmiddleearth.mcme.events.PVP.bungee;
 
 import lombok.Getter;
 import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.api.scheduler.ScheduledTask;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Fraspace5
@@ -35,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 public final class PVPBungee extends Plugin {
 
     @Getter
-    private static final HashMap<UUID, Boolean> data = new HashMap<>();
+    private static final HashMap<UUID, List<String>> data = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -47,41 +44,12 @@ public final class PVPBungee extends Plugin {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        backup();
 
     }
 
     @Override
     public void onDisable() {
-        saveAll();
         getLogger().info("PVPBungee plugin" + this.getDescription().getVersion() + "v disabled!");
-    }
-
-    private void saveAll() {
-
-        File file = new File(getClass().getResource("players.json").toString());
-
-        if (!file.exists()) {
-            file.mkdir();
-        }
-        JSONObject json = new JSONObject();
-        JSONArray pldata = new JSONArray();
-
-        for (UUID uuid : data.keySet()) {
-            pldata.put(getPlayer(uuid, data.get(uuid)));
-        }
-
-        json.put("players", pldata);
-
-        try {
-            FileWriter s = new FileWriter(file);
-            s.write(json.toString(1));
-            s.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
     }
 
 
@@ -99,41 +67,31 @@ public final class PVPBungee extends Plugin {
 
             }
             myReader.close();
+            try {
+                JSONObject json = new JSONObject(text.toString());
 
-            JSONObject json = new JSONObject(text.toString());
+                JSONArray array = json.getJSONArray("players");
 
-            JSONArray array = json.getJSONArray("players");
+                for (int i = 0; i < array.length(); i++) {
 
-            for (int i = 0; i < array.length(); i++) {
+                    JSONObject player = array.getJSONObject(i);
 
-                JSONObject player = array.getJSONObject(i);
-
-                data.put(UUID.fromString(player.getString("uuid")), player.getBoolean("bool"));
+                    data.put(UUID.fromString(player.getString("uuid")), listUnserialize(player.getString("games")));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-
 
         }
 
 
     }
 
-    private JSONObject getPlayer(UUID uuid, Boolean bool) {
-        JSONObject player = new JSONObject();
-        player.put("uuid", uuid.toString());
-        player.put("bool", bool);
-        return player;
-    }
+    private List<String> listUnserialize(String s) {
+        List<String> list = new ArrayList<>();
+        Collections.addAll(list, s.split(";"));
 
-    private void backup() {
-
-        ScheduledTask schedule = getProxy().getScheduler().schedule(this, new Runnable() {
-            @Override
-            public void run() {
-                saveAll();
-            }
-        }, 2, 60, TimeUnit.MINUTES);
-
-
+        return list;
     }
 
 

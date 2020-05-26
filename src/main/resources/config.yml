@@ -8,4 +8,5 @@ SummerEvent:
     Enabled: false
 PVP:
     Enabled: true
+    Broadcast_minutes: 2
 
