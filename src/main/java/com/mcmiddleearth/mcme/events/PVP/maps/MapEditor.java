@@ -65,16 +65,14 @@ public class MapEditor implements CommandExecutor, Listener{
                 if(args[0].equalsIgnoreCase("lobby")){
                     p.sendMessage(ChatColor.GREEN + "Sending Signs");
                     for(Map m : Map.maps.values()){
-                        ItemStack sign = new ItemStack(Material.OAK_WALL_SIGN);
+                        ItemStack sign = new ItemStack(Material.OAK_SIGN);
                         ItemMeta im = sign.getItemMeta();
                         im.setDisplayName(m.getName());
                         String gamemode = "none";
                         if(m.getGm() != null){
                             gamemode = m.getGmType();
                         }
-                        im.setLore(Arrays.asList(new String[] {m.getTitle(), 
-                            gamemode,
-                            String.valueOf(m.getMax())}));
+                        im.setLore(Arrays.asList(new String[] {m.getTitle(), gamemode, String.valueOf(m.getMax())}));
                         sign.setItemMeta(im);
                         p.getInventory().addItem(sign);
                     }
@@ -99,10 +97,7 @@ public class MapEditor implements CommandExecutor, Listener{
                                 }
                                 m.getImportantPoints().put(args[3], new EventLocation(p.getLocation().add(0, -1, 0)));
                                 EventLocation el = new EventLocation(p.getLocation().add(0, -1, 0));
-                                p.sendMessage(ChatColor.YELLOW + args[3] + " set to (" + 
-                                        el.getX() + ", " + 
-                                        el.getY() + ", " +
-                                        el.getZ() + ")");
+                                p.sendMessage(ChatColor.YELLOW + args[3] + " set to (" +  el.getX() + ", " + el.getY() + ", " + el.getZ() + ")");
                             }
                             else if(args[2].equalsIgnoreCase("setMax") && args.length > 3){
                                 m.setMax(Integer.parseInt(args[3]));
@@ -245,9 +240,6 @@ public class MapEditor implements CommandExecutor, Listener{
                                 Map.maps.put(args[1], new Map(p.getLocation(), args[1]));
                                 System.out.println(args[1]);
                             }
-                            else{
-                                p.sendMessage(ChatColor.RED + "No such map!");
-                            }
                         }
                     }
                     else{
@@ -259,6 +251,7 @@ public class MapEditor implements CommandExecutor, Listener{
                                 }
                                 p.sendMessage(ChatColor.YELLOW + "]");
                             }
+                        }
                         }
                     }
                 }else if(args[0].equalsIgnoreCase("pastemap")){
@@ -278,7 +271,6 @@ public class MapEditor implements CommandExecutor, Listener{
                     }
                 }
             }
-        }
         return true;
     }
     
