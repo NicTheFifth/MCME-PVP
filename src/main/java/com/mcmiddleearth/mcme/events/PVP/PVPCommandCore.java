@@ -39,8 +39,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -49,7 +47,7 @@ import java.util.logging.Logger;
 public class PVPCommandCore implements CommandExecutor, TabCompleter {
     
     protected static Map queuedGame = null;
-
+    
     protected static Map runningGame = null;
     
     protected int parameter;
@@ -72,7 +70,7 @@ public class PVPCommandCore implements CommandExecutor, TabCompleter {
                     }
                     else if(args[1].equalsIgnoreCase("getgames") && p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())){
                         return pvpGameGetGames(cs);
-                    }
+                    }    
                 } 
                 else if(args[0].equalsIgnoreCase("join")){
                 	return pvpJoin(p);
@@ -89,7 +87,7 @@ public class PVPCommandCore implements CommandExecutor, TabCompleter {
                     }
                     else if(args[1].equalsIgnoreCase("clear") && (p.hasPermission(Permissions.PVP_ADMIN.getPermissionNode()))){
                         return pvpStatClear();
-                    }
+                    }   
                 }
                 else if(args[0].equalsIgnoreCase("rules")){
                     if(args.length < 2) {
@@ -140,27 +138,26 @@ public class PVPCommandCore implements CommandExecutor, TabCompleter {
                 arguments.add("rules");
                 arguments.add("pipe");
                 arguments.add("stats");
-                if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
+                if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
                     arguments.add("map");
                     arguments.add("game");
                     arguments.add("kick");
-                    if(p.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
+                    if(sender.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
                         arguments.add("removegame");
                         arguments.add("togglevoxel");
                         arguments.add("lobby");
-                        arguments.add("pastemap");
                     }
                 }
             } else if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("map")) {
-                    if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
+                    if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
                         arguments.add("list");
-                        if (p.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
+                        if (sender.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
                             arguments.add("<map-name>");
                         }
                     }
                 } else if (args[0].equalsIgnoreCase("game")) {
-                    if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
+                    if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
                         arguments.add("quickstart");
                         arguments.add("start");
                         arguments.add("end");
@@ -174,11 +171,11 @@ public class PVPCommandCore implements CommandExecutor, TabCompleter {
                     arguments.add("teamdeathmatch");
                     arguments.add("teamconquest");
                 } else if (args[0].equalsIgnoreCase("stats")) {
-                    if(p.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
+                    if(sender.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
                         arguments.add("clear");
                     }
                 } else if (args[0].equalsIgnoreCase("removegame")) {
-                    if (p.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
+                    if (sender.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
                         arguments.add("<map-name>");
                     }
                 }
@@ -231,7 +228,6 @@ public class PVPCommandCore implements CommandExecutor, TabCompleter {
                     return Flist;
                 } else
                     return null;
-
         } else
             return null;
     }
@@ -425,17 +421,27 @@ public class PVPCommandCore implements CommandExecutor, TabCompleter {
 	}
         
         private void sendBroadcast(Player player, Map m,String[] args) {
-            if(!Arrays.asList(args).contains("test")) {
-                ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                out.writeUTF("Message");
-                out.writeUTF("ALL");
-                out.writeUTF(ChatColor.GRAY + player.getName() + " has started a game\n"
-                    +ChatColor.GRAY + "Map: " + ChatColor.GREEN + m.getTitle() + ChatColor.GRAY + ", Gamemode: " + ChatColor.GREEN + m.getGmType()+"\n"
-                    +ChatColor.GRAY + "Use " + ChatColor.GREEN + "/pvp join" + ChatColor.GRAY + " to join the game\n"
-                    +ChatColor.GRAY + "There are only " + m.getMax() + " slots left\n"
-                    +ChatColor.GREEN + "Do /pvp rules " + removeSpaces(m.getGmType()) + " if you don't know how this gamemode works!");
-                player.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
-            }
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if (PVPCommandCore.getRunningGame().getName().equalsIgnoreCase(m.getName())) {
+
+                            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                            out.writeUTF("Message");
+                            out.writeUTF("ALL");
+                            out.writeUTF("mcme:event");
+                            out.writeUTF(ChatColor.GRAY + player.getName() + " has started a game\n"
+                                    + ChatColor.GRAY + "Map: " + ChatColor.GREEN + m.getTitle() + ChatColor.GRAY + ", Gamemode: " + ChatColor.GREEN + m.getGmType() + "\n"
+                                    + ChatColor.GRAY + "Use " + ChatColor.GREEN + "/pvp join" + ChatColor.GRAY + " to join the game\n"
+                                    + ChatColor.GRAY + "There are only " + m.getMax() + " slots left\n"
+                                    + ChatColor.GREEN + "Do /pvp rules " + removeSpaces(m.getGmType()) + " if you don't know how this gamemode works!");
+                            player.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
+                        } else {
+                            cancel();
+                        }
+
+                    }
+                }.runTaskTimer(Main.getPlugin(), 0L, 1200 * Main.getMinutes());
         }
 	
 	private boolean pvpGameEnd(CommandSender sender) {

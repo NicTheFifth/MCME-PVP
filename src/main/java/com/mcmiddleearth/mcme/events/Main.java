@@ -58,7 +58,7 @@ public class Main extends JavaPlugin{
     private static File pluginDirectory;
     private static File playerDirectory;
     private static boolean blockprotect = false;
-    
+    private static Integer minutes_broadcast;
     @Override
     public void onEnable(){
         plugin = this;
@@ -93,6 +93,7 @@ public class Main extends JavaPlugin{
         PluginManager pm = this.getServer().getPluginManager();
         pm.registerEvents(new ListenerCore(), this);
         boolean PVP = this.getConfig().getBoolean("PVP.Enabled");
+        minutes_broadcast = this.getConfig().getInt("PVP.Broadcast_minutes");
         if(PVP){
             PVPCore = new PVPCore();
             PVPCore.onEnable();
@@ -159,6 +160,10 @@ public class Main extends JavaPlugin{
 
     public static Main getPlugin() {
         return plugin;
+    }
+
+    public static Integer getMinutes() {
+        return minutes_broadcast;
     }
 
     public String getSpawnWorld() {
