@@ -126,6 +126,7 @@ public class ListenerChat implements Listener {
         if (!file.exists()) {
             file.mkdir();
         }
+
         try {
             JSONObject json = new JSONObject();
             JSONArray pldata = new JSONArray();
