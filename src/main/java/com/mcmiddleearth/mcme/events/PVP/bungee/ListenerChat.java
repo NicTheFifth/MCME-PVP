@@ -121,7 +121,7 @@ public class ListenerChat implements Listener {
 
     private void saveAll() {
 
-        File file = new File(getClass().getResource("players.json").toString());
+        File file = new File(getClass().getResource("players.json").getFile());
 
         if (!file.exists()) {
             file.mkdir();

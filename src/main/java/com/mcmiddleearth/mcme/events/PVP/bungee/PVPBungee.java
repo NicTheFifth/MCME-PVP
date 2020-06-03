@@ -55,7 +55,7 @@ public final class PVPBungee extends Plugin {
 
       private void loadAll() throws FileNotFoundException {
         data.clear();
-        File file = new File(getClass().getResource("players.json").toString());
+        File file = new File(getClass().getResource("players.json").getFile());
 
         if (!file.exists()) {
             file.mkdir();
