@@ -19,12 +19,14 @@ package com.mcmiddleearth.mcme.events.PVP.bungee;
 import lombok.Getter;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Fraspace5
@@ -34,32 +36,39 @@ public final class PVPBungee extends Plugin {
     @Getter
     private static final HashMap<UUID, List<String>> data = new HashMap<>();
 
+    @Getter
+    private static PVPBungee instance;
+
     @Override
     public void onEnable() {
-        getLogger().info("PVPBungee plugin" + this.getDescription().getVersion() + "v enabled!");
+        getLogger().info("PVPBungee plugin " + this.getDescription().getVersion() + "v enabled!");
+        instance = this;
         getProxy().getPluginManager().registerListener(this, new ListenerChat());
-
         try {
             loadAll();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+
+        } catch (IOException ex) {
+            Logger.getLogger(PVPBungee.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
     @Override
     public void onDisable() {
-        getLogger().info("PVPBungee plugin" + this.getDescription().getVersion() + "v disabled!");
+        getLogger().info("PVPBungee plugin " + this.getDescription().getVersion() + "v disabled!");
     }
 
-
-      private void loadAll() throws FileNotFoundException {
+    private void loadAll() throws FileNotFoundException, IOException {
         data.clear();
-        File file = new File(getClass().getResource("players.json").getFile());
+        File file = new File(getDataFolder().getAbsolutePath() + "/players.json");
 
+        if (!getDataFolder().exists()) {
+            getDataFolder().mkdir();
+        }
         if (!file.exists()) {
-            file.mkdir();
-        } else {
+            file.createNewFile();
+        } else if (file.length() > 0) {
             Scanner myReader = new Scanner(file);
             StringBuilder text = new StringBuilder();
             while (myReader.hasNextLine()) {
@@ -67,23 +76,18 @@ public final class PVPBungee extends Plugin {
 
             }
             myReader.close();
-            try {
-                JSONObject json = new JSONObject(text.toString());
+            
+            JSONObject json = new JSONObject(text.toString());
+            JSONArray array = json.getJSONArray("players");
 
-                JSONArray array = json.getJSONArray("players");
+            for (int i = 0; i < array.length(); i++) {
 
-                for (int i = 0; i < array.length(); i++) {
+                JSONObject player = array.getJSONObject(i);
 
-                    JSONObject player = array.getJSONObject(i);
-
-                    data.put(UUID.fromString(player.getString("uuid")), listUnserialize(player.getString("games")));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+                data.put(UUID.fromString(player.getString("uuid")), listUnserialize(player.getString("games")));
             }
 
         }
-
 
     }
 
@@ -93,6 +97,5 @@ public final class PVPBungee extends Plugin {
 
         return list;
     }
-
 
 }
