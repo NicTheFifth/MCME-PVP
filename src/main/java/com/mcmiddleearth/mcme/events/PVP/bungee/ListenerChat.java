@@ -19,6 +19,7 @@ package com.mcmiddleearth.mcme.events.PVP.bungee;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import com.mcmiddleearth.mcme.events.PVP.PVPCommandCore;
+import java.io.EOFException;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -36,6 +37,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import net.md_5.bungee.api.connection.Connection;
 
 /**
  * @author Fraspace5
@@ -43,13 +45,13 @@ import java.util.UUID;
 public class ListenerChat implements Listener {
 
     @EventHandler
-    public void chatMessage(ChatEvent event) {
-        ProxiedPlayer pl = (ProxiedPlayer) event.getReceiver();
+    public void chatMessage(ChatEvent event) throws IOException {
         String[] message = event.getMessage().split(" ");
-        if (event.isCommand() && event.getSender() instanceof ProxiedPlayer) {
-            if (message[0].equalsIgnoreCase("/pvp")) {
-                if (message.length == 2 && (message[1].equalsIgnoreCase("acknowlege") || message[1].equalsIgnoreCase("ack"))) {
-                    if (PVPBungee.getData().containsKey(pl.getUniqueId())) {
+        if (event.getSender() instanceof ProxiedPlayer && message[0].equalsIgnoreCase("/pvp")) {
+            ProxiedPlayer pl = (ProxiedPlayer) event.getSender();
+            if (message.length == 2 && (message[1].equalsIgnoreCase("acknowlege") || message[1].equalsIgnoreCase("ack"))) {
+                if (PVPBungee.getData().containsKey(pl.getUniqueId())) {
+                    if (PVPCommandCore.getRunningGame() != null) {
                         if (!PVPBungee.getData().get(pl.getUniqueId()).contains(PVPCommandCore.getRunningGame().getName())) {
                             pl.sendMessage(new ComponentBuilder("You'll no longer receive pvp alerts for " + PVPCommandCore.getRunningGame().getName()).color(ChatColor.AQUA).create());
 
@@ -59,97 +61,93 @@ public class ListenerChat implements Listener {
                             PVPBungee.getData().remove(pl.getUniqueId());
                             PVPBungee.getData().put(pl.getUniqueId(), s);
                         }
-
                     } else {
-                        pl.sendMessage(new ComponentBuilder("From now you will be informed about new pvp games ").color(ChatColor.AQUA).create());
-                        PVPBungee.getData().put(pl.getUniqueId(), new ArrayList<String>());
+                        pl.sendMessage(new ComponentBuilder("No running games rn").color(ChatColor.AQUA).create());
                     }
-
-                } else if (message.length == 2 && (message[1].equalsIgnoreCase("unsubscribe") || message[1].equalsIgnoreCase("unsub"))) {
-
-                    if (!PVPBungee.getData().containsKey(pl.getUniqueId())) {
-                        pl.sendMessage(new ComponentBuilder("You'll no longer receive pvp alerts ").color(ChatColor.AQUA).create());
-                        PVPBungee.getData().put(pl.getUniqueId(), new ArrayList<String>());
-                        saveAll();
-                    } else {
-                        pl.sendMessage(new ComponentBuilder("You have already unsubscribed ").color(ChatColor.RED).create());
-                    }
-
-
-                } else if (message.length == 2 && (message[1].equalsIgnoreCase("subscribe") || message[1].equalsIgnoreCase("sub"))) {
-                    if (PVPBungee.getData().containsKey(pl.getUniqueId())) {
-                        pl.sendMessage(new ComponentBuilder("From now you will be informed about new pvp games ").color(ChatColor.AQUA).create());
-                        PVPBungee.getData().remove(pl.getUniqueId());
-                        saveAll();
-                    } else {
-                        pl.sendMessage(new ComponentBuilder("You have already subscribed ").color(ChatColor.RED).create());
-
-                    }
-
 
                 } else {
-                    pl.sendMessage(new ComponentBuilder("Not enough arguments for this command").color(ChatColor.RED).create());
+                    pl.sendMessage(new ComponentBuilder("From now you will be informed about new pvp games ").color(ChatColor.AQUA).create());
+                    PVPBungee.getData().put(pl.getUniqueId(), new ArrayList<String>());
+                }
+
+            } else if (message.length == 2 && (message[1].equalsIgnoreCase("unsubscribe") || message[1].equalsIgnoreCase("unsub"))) {
+
+                if (!PVPBungee.getData().containsKey(pl.getUniqueId())) {
+                    pl.sendMessage(new ComponentBuilder("You'll no longer receive pvp alerts ").color(ChatColor.AQUA).create());
+                    PVPBungee.getData().put(pl.getUniqueId(), new ArrayList<String>());
+                    saveAll();
+                } else {
+                    pl.sendMessage(new ComponentBuilder("You have already unsubscribed ").color(ChatColor.RED).create());
+                }
+
+            } else if (message.length == 2 && (message[1].equalsIgnoreCase("subscribe") || message[1].equalsIgnoreCase("sub"))) {
+                if (PVPBungee.getData().containsKey(pl.getUniqueId())) {
+                    pl.sendMessage(new ComponentBuilder("From now you will be informed about new pvp games ").color(ChatColor.AQUA).create());
+                    PVPBungee.getData().remove(pl.getUniqueId());
+                    saveAll();
+                } else {
+                    pl.sendMessage(new ComponentBuilder("You have already subscribed ").color(ChatColor.RED).create());
 
                 }
 
             }
 
-
         }
 
-
     }
-
 
     @EventHandler
     public void onMessageSent(PluginMessageEvent event) {
-        ProxiedPlayer pl = (ProxiedPlayer) event.getReceiver();
-        ByteArrayDataInput input = ByteStreams.newDataInput(event.getData());
-        String subchannel = input.readUTF();
 
-        if (subchannel.equalsIgnoreCase("mcme:event") && PVPBungee.getData().containsKey(pl.getUniqueId())) {
-            if (PVPBungee.getData().get(pl.getUniqueId()).isEmpty()) {
-                event.setCancelled(true);
-            } else if (PVPBungee.getData().get(pl.getUniqueId()).contains(PVPCommandCore.getRunningGame().getName())) {
-                event.setCancelled(true);
+        if (event.getReceiver() instanceof ProxiedPlayer) {
+            ProxiedPlayer pl = (ProxiedPlayer) event.getReceiver();
+            ByteArrayDataInput input = ByteStreams.newDataInput(event.getData());
+            String subchannel = input.readUTF();
+
+            if (subchannel.equalsIgnoreCase("mcme:event") && PVPBungee.getData().containsKey(pl.getUniqueId())) {
+                if (PVPBungee.getData().get(pl.getUniqueId()).isEmpty()) {
+                    event.setCancelled(true);
+                } else if (PVPBungee.getData().get(pl.getUniqueId()).contains(PVPCommandCore.getRunningGame().getName())) {
+                    event.setCancelled(true);
+                }
+
             }
 
         }
-
 
     }
 
-    private void saveAll() {
+    private void saveAll() throws IOException {
 
-        File file = new File(getClass().getResource("players.json").toString());
-
-        if (!file.exists()) {
-            file.mkdir();
+        File file = new File(PVPBungee.getInstance().getDataFolder().getAbsolutePath() + "/players.json");
+        if (!PVPBungee.getInstance().getDataFolder().exists()) {
+            PVPBungee.getInstance().getDataFolder().mkdir();
         }
+
+        if (!PVPBungee.getInstance().getDataFolder().exists()) {
+            PVPBungee.getInstance().getDataFolder().createNewFile();
+        }
+
+        JSONObject json = new JSONObject();
+        JSONArray pldata = new JSONArray();
+
+        for (UUID uuid : PVPBungee.getData().keySet()) {
+            JSONObject player = new JSONObject();
+            player.put("uuid", uuid.toString());
+            pldata.put(player);
+            player.put("games", serialize(PVPBungee.getData().get(uuid)));
+        }
+
+        json.put("players", pldata);
+
         try {
-            JSONObject json = new JSONObject();
-            JSONArray pldata = new JSONArray();
-
-            for (UUID uuid : PVPBungee.getData().keySet()) {
-                JSONObject player = new JSONObject();
-                player.put("uuid", uuid.toString());
-                pldata.put(player);
-                player.put("games", serialize(PVPBungee.getData().get(uuid)));
-            }
-
-            json.put("players", pldata);
-
-            try {
-                FileWriter s = new FileWriter(file);
-                s.write(json.toString(1));
-                s.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        } catch (JSONException e) {
+            FileWriter s = new FileWriter(file);
+            s.write(json.toString(1));
+            s.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     private String serialize(List<String> list) {

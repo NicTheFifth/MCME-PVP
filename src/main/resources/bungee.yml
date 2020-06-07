@@ -2,4 +2,6 @@ name: PVPBungee
 version: ${project.version}
 main: com.mcmiddleearth.mcme.events.PVP.bungee.PVPBungee
 description: PVP Messaging
+author: Fraspace5
+api-version: 1.15
 #Copyright (C) 2020 MCME (Fraspace5)
