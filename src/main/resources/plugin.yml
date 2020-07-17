@@ -33,3 +33,4 @@ commands:
   t:
     description: Send a message to players on your team
     usage: /t <message>
+permissions:

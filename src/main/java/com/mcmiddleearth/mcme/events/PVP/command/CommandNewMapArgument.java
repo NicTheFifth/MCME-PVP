@@ -1,0 +1,55 @@
+package com.mcmiddleearth.mcme.events.PVP.command;
+
+import com.google.common.collect.Lists;
+import com.mojang.brigadier.LiteralMessage;
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.arguments.ArgumentType;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+
+public class CommandNewMapArgument implements ArgumentType<String> {
+
+    Set<String> options;
+    Set<String> endings;
+    public CommandNewMapArgument(Set<String> examples) {
+        options = examples; endings = new HashSet<>(Lists.newArrayList("-TS", "-TDM", "-IN", "-OITQ", "-TC", "-RB", "-FFA"));
+    }
+
+    @Override
+    public String parse(StringReader reader) throws CommandSyntaxException {
+        String o = reader.readString();
+        if (options.contains(o)) {
+            throw new CommandSyntaxException(new SimpleCommandExceptionType(new LiteralMessage("Failed parsing during action evaluation")), new LiteralMessage("Failed parsing during action evaluation on action:" + o));
+        }
+        for(String ending : endings) {
+            if (o.endsWith(ending))
+                return o;
+        }
+        throw new CommandSyntaxException(new SimpleCommandExceptionType(new LiteralMessage("Failed parsing during action evaluation")), new LiteralMessage("Failed parsing during action evaluation on action:" + o));
+    }
+
+    @Override
+    public Collection<String> getExamples() {
+        return options;
+    }
+
+    @Override
+    public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
+        for (String ending : endings) {
+            if (builder.getRemaining().endsWith(ending)) {
+                builder.suggest(ending);
+            }
+        }
+        return builder.buildFuture();
+    }
+}
+
+

@@ -18,17 +18,20 @@
  */
 package com.mcmiddleearth.mcme.events.PVP;
 
+import com.google.common.base.Joiner;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.mcmiddleearth.mcme.events.Main;
 import com.mcmiddleearth.mcme.events.PVP.Gamemode.BasePluginGamemode.GameState;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.BukkitTeamHandler;
 import com.mcmiddleearth.mcme.events.PVP.Handlers.ChatHandler;
-import com.mcmiddleearth.mcme.events.PVP.Handlers.CommandBlockHandler;
-import com.mcmiddleearth.mcme.events.PVP.Handlers.GearHandler;
 import com.mcmiddleearth.mcme.events.PVP.maps.Map;
-import com.mcmiddleearth.mcme.events.PVP.maps.MapEditor;
 import com.mcmiddleearth.mcme.events.Permissions;
+import com.mcmiddleearth.mcme.events.PVP.command.PVPCommand;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.suggestion.Suggestion;
+import com.mojang.brigadier.suggestion.Suggestions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -39,197 +42,66 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  *
  * @author Donovan <dallen@dallen.xyz>
  */
-public class PVPCommandCore implements CommandExecutor, TabCompleter {
+public class PVPCommandCore implements TabCompleter, CommandExecutor{
     
     protected static Map queuedGame = null;
     
     protected static Map runningGame = null;
     
     protected int parameter;
-    
+
+    protected static Main main;
+
+    private CommandDispatcher<Player> commandDispatcher;
+
+    public PVPCommandCore(){
+        main = Main.getPlugin();
+        this.commandDispatcher = new PVPCommand(main);
+    }
     @Override
-    public boolean onCommand(CommandSender cs, Command cmnd, String label, String[] args) {
-        if(cs instanceof Player){
-            if(args.length >= 1){
-                Player p = (Player) cs;
-                
-                if(args[0].equalsIgnoreCase("game") && args.length >= 2){
-                    if(args[1].equalsIgnoreCase("start")){
-                        return pvpGameStart(cs);
-                    }
-                    else if(args[1].equalsIgnoreCase("quickstart")){
-        				return args.length >= 3 ? pvpGameQuickstart(cs, args[2], args) : false;
-                    }    
-                    else if(args[1].equalsIgnoreCase("end")){
-                        return pvpGameEnd(cs);
-                    }
-                    else if(args[1].equalsIgnoreCase("getgames") && p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())){
-                        return pvpGameGetGames(cs);
-                    }    
-                } 
-                else if(args[0].equalsIgnoreCase("join")){
-                	return pvpJoin(p);
-                }
-                else if(args[0].equalsIgnoreCase("kick") && p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())){
-                	return pvpKick(p, args[1]);
-                }
-                else if(args[0].equalsIgnoreCase("pipe")){
-                    GearHandler.giveCustomItem(p, GearHandler.CustomItem.PIPE);
-                }
-                else if(args[0].equalsIgnoreCase("stat") || args[0].equalsIgnoreCase("stats") || args[0].equalsIgnoreCase("statistics")){
-                    if(args.length == 1) {
-                    	return pvpStat(p, args.length);
-                    }
-                    else if(args[1].equalsIgnoreCase("clear") && (p.hasPermission(Permissions.PVP_ADMIN.getPermissionNode()))){
-                        return pvpStatClear();
-                    }   
-                }
-                else if(args[0].equalsIgnoreCase("rules")){
-                    if(args.length < 2) {
-                    	p.sendMessage(ChatColor.RED + "Format: /pvp rules <gamemode>");
-                        p.sendMessage(ChatColor.GRAY + "Gamemodes are: FreeForAll, Infected, OneInTheQuiver, Ringbearer, TeamConquest, TeamDeathmatch, and TeamSlayer");
-                    }
-                    else {
-                    	return pvpRules(p, args[1]);
-                    }
-                    return true;
-                }
-                else if(args[0].equalsIgnoreCase("removegame") && (p.hasPermission(Permissions.PVP_ADMIN.getPermissionNode()))){
-                    if(args.length < 2) {
-                    	p.sendMessage(ChatColor.RED + "Format: /pvp removegame <map>");
-                    	return true;
-                    }
-                    else {
-                    	return pvpRemoveGame(p, args[1]);
-                    }
-                }
-                if(cs.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) { 
-                    return new MapEditor().onCommand(cs, cmnd, label, args);
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        Logger.getLogger("logger").log(Level.INFO, "onCommand called");
+        if (sender instanceof Player) {
+            try {
+                if (args.length > 0) {
+                    commandDispatcher.execute(commandDispatcher.parse(String.format("%s %s", label, Joiner.on(" ").join(args)), (Player) sender));
                 } else {
-                    cs.sendMessage(ChatColor.RED + "You don't have the permission to edit maps!");
+                    commandDispatcher.execute(commandDispatcher.parse(label, (Player) sender));
                 }
-            
-            }   
-            else if(args.length>0 && args[0].equalsIgnoreCase("togglevoxel") && cs.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())){
-                toggleVoxel(false);
-            } else {
-                cs.sendMessage(ChatColor.RED + "You are at the PvP server already !");
+            } catch (CommandSyntaxException e) {
+                e.printStackTrace();
             }
-            return true;
         }
-        else if(cs instanceof BlockCommandSender){
-            return new CommandBlockHandler().onCommand(cs, cmnd, label, args);
-        }
-        return false;
+        return true;
     }
 
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args){
-        List<String> arguments = new ArrayList<>();
-        List<String> Flist = new ArrayList<>();
-        Player p = (Player) sender;
-        if (cmd.getName().equalsIgnoreCase("pvp")) {
-            if (args.length == 1) {
-                arguments.add("join");
-                arguments.add("rules");
-                arguments.add("pipe");
-                arguments.add("stats");
-                if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
-                    arguments.add("map");
-                    arguments.add("game");
-                    arguments.add("kick");
-                    if(sender.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
-                        arguments.add("removegame");
-                        arguments.add("togglevoxel");
-                        arguments.add("lobby");
-                    }
-                }
-            } else if (args.length == 2) {
-                if (args[0].equalsIgnoreCase("map")) {
-                    if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
-                        arguments.add("list");
-                        if (sender.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
-                            arguments.add("<map-name>");
-                        }
-                    }
-                } else if (args[0].equalsIgnoreCase("game")) {
-                    if(sender.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
-                        arguments.add("quickstart");
-                        arguments.add("start");
-                        arguments.add("end");
-                        arguments.add("getgames");
-                    }
-                } else if (args[0].equalsIgnoreCase("rules")) {
-                    arguments.add("infected");
-                    arguments.add("oneinthequiver");
-                    arguments.add("ringbearer");
-                    arguments.add("teamslayer");
-                    arguments.add("teamdeathmatch");
-                    arguments.add("teamconquest");
-                } else if (args[0].equalsIgnoreCase("stats")) {
-                    if(sender.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
-                        arguments.add("clear");
-                    }
-                } else if (args[0].equalsIgnoreCase("removegame")) {
-                    if (sender.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())) {
-                        arguments.add("<map-name>");
-                    }
-                }
-            } else if (args.length == 3) {
-                if (args[0].equalsIgnoreCase("map")) {
-                    if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
-                        arguments.add("spawn");
-                        arguments.add("poi");
-                        arguments.add("setMax");
-                        arguments.add("setTitle");
-                        arguments.add("setGamemode");
-                        arguments.add("setArea");
-                        arguments.add("setRP");
-                    }
-                } else if (args[1].equalsIgnoreCase("quickstart")) {
-                    if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
-                        arguments.add("<map-name>");
-                    }
-                }
-            } else if (args.length == 4) {
-                if (args[1].equalsIgnoreCase("quickstart")) {
-                    if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) {
-                        arguments.add("test");
-                    }
-                } else if(args[2].equalsIgnoreCase("setgamemode")){
-                    arguments.add("TeamSlayer");
-                    arguments.add("TeamDeathmatch");
-                    arguments.add("FreeForAll");
-                    arguments.add("Infected");
-                    arguments.add("OneInTheQuiver");
-                    arguments.add("Ringbearer");
-                    arguments.add("TeamConquest");
-                    arguments.add("KingOfTheHill");
-                } else if(args[2].equalsIgnoreCase("setrp")) {
-                    arguments.add("eriador");
-                    arguments.add("rohan");
-                    arguments.add("lothlorien");
-                    arguments.add("gondor");
-                    arguments.add("dwarven");
-                    arguments.add("moria");
-                    arguments.add("mordor");
-                }
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (sender instanceof Player) {
+            try {
+                CompletableFuture<Suggestions> completionSuggestions = commandDispatcher.getCompletionSuggestions(commandDispatcher.parse(getInput(command, args), (Player) sender));
+                return completionSuggestions.get().getList().stream().map(Suggestion::getText).collect(Collectors.toList());
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
             }
-            if (args.length >= 1 && arguments.size() != 0) {
-                for (String s : arguments) {
-                    if (s.toLowerCase().startsWith(args[args.length -1].toLowerCase())) {
-                        Flist.add(s);
-                        }
-                    }
-                    return Flist;
-                } else
-                    return null;
-        } else
-            return null;
+        }
+        return new ArrayList<>();
+    }
+    private String getInput(Command command, String[] args) {
+        StringBuilder input = new StringBuilder(command.getName());
+        for (String arg : args) {
+            input.append(CommandDispatcher.ARGUMENT_SEPARATOR).append(arg);
+        }
+        return input.toString();
     }
 
     public static void toggleVoxel(boolean onlyDisable){
@@ -541,7 +413,7 @@ public class PVPCommandCore implements CommandExecutor, TabCompleter {
         return true;
 	}
 	
-	private boolean pvpStat(Player p, int argLength) {
+	private boolean pvpStat(Player p) {
         PlayerStat ps = PlayerStat.getPlayerStats().get(p.getName());
     
         p.sendMessage(ChatColor.GREEN + "Showing stats for " + p.getName());
@@ -586,39 +458,37 @@ public class PVPCommandCore implements CommandExecutor, TabCompleter {
             return true;
 	}
         
-        private boolean pvpKick(Player p, String kickedPlayerName) {
-            Player kickedPlayer = Bukkit.getPlayer(kickedPlayerName);
-            if(kickedPlayer==null) {
-                p.sendMessage(ChatColor.RED + "Player not found.");
-                return true;
-            }
-            Map m;
-        
-            if(queuedGame != null){
-                m = queuedGame;
-            }
-            else if(runningGame != null){
-                m = runningGame;
-            }
-            else{
-                p.sendMessage(ChatColor.RED + "There is no queued or running game!");
-                return true;
-            }
-
-            if(!m.getGm().getPlayers().contains(kickedPlayer)){
-                p.sendMessage(ChatColor.RED+"Player is not in the current game.");
-                return true;
-            } else {
-                //JoinLeaveHandler.handlePlayerQuit(kickedPlayer);
-                ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                out.writeUTF("ConnectOther");
-                out.writeUTF(kickedPlayerName);
-                out.writeUTF("world");
-                p.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
-                p.sendMessage(ChatColor.GREEN+"Kicked "+kickedPlayerName+" from the PvP server!");
-            }
+	private boolean pvpKick(Player p, String kickedPlayerName) {
+        Player kickedPlayer = Bukkit.getPlayer(kickedPlayerName);
+        if(kickedPlayer==null) {
+            p.sendMessage(ChatColor.RED + "Player not found.");
             return true;
         }
+        Map m;
+
+        if(queuedGame != null){
+            m = queuedGame;
+        } else if(runningGame != null){
+            m = runningGame;
+        } else{
+            p.sendMessage(ChatColor.RED + "There is no queued or running game!");
+            return true;
+        }
+
+        if(!m.getGm().getPlayers().contains(kickedPlayer)){
+            p.sendMessage(ChatColor.RED+"Player is not in the current game.");
+            return true;
+        } else {
+            //JoinLeaveHandler.handlePlayerQuit(kickedPlayer);
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("ConnectOther");
+            out.writeUTF(kickedPlayerName);
+            out.writeUTF("world");
+            p.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
+            p.sendMessage(ChatColor.GREEN+"Kicked "+kickedPlayerName+" from the PvP server!");
+        }
+        return true;
+    }
 
     public static Map getQueuedGame() {
         return queuedGame;

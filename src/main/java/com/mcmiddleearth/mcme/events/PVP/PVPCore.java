@@ -18,6 +18,7 @@
  */
 package com.mcmiddleearth.mcme.events.PVP;
 
+import com.google.common.base.Joiner;
 import com.mcmiddleearth.mcme.events.Event;
 import com.mcmiddleearth.mcme.events.Main;
 import com.mcmiddleearth.mcme.events.PVP.Gamemode.anticheat.AntiCheatListeners;
@@ -107,10 +108,8 @@ public class PVPCore implements Event{
                         
                 }
             }, 20);
-        
     }
-    
-    @Override
+
     public void onDisable(){
         for(String mn : Map.maps.keySet()){
             Map m = Map.maps.get(mn);
