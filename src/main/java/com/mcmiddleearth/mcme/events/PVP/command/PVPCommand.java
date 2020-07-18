@@ -120,7 +120,9 @@ public class PVPCommand extends CommandDispatcher<Player>{
                 return 1;} )
                 .then(LiteralArgumentBuilder.<Player>literal("clear").executes(c -> {
                     doCommand("statsClear", c.getSource());
-                    return 1;} )))
+                    return 1;} )).executes(c -> {
+                        doCommand("stats", c.getSource());
+                        return 1;}))
             .then(LiteralArgumentBuilder.<Player>literal("removegame")
                 .then(RequiredArgumentBuilder.<Player, String>argument("map", new CommandMapArgument(mapNames)).executes(c -> {
                     doCommand("deleteMap", c.getArgument("map", String.class), c.getSource());
@@ -140,7 +142,7 @@ public class PVPCommand extends CommandDispatcher<Player>{
 
     private void doCommand(String action, Player source) {
         Logger.getLogger("logger");
-        switch (action.toLowerCase()) {
+        switch (action) {
             case "mapList":
                 Logger.getLogger("logger").log(Level.INFO, "mapList command received");
                 break;
@@ -209,13 +211,13 @@ public class PVPCommand extends CommandDispatcher<Player>{
         Logger.getLogger("logger");
         switch(action) {
             case "mapPointCreate":
-                Logger.getLogger("logger").log(Level.INFO, "mapPointCreate received with" + argument1 + " and " + argument2);
+                Logger.getLogger("logger").log(Level.INFO, "mapPointCreate received with " + argument1 + " and " + argument2);
                 break;
             case "createVarTest":
-                Logger.getLogger("logger").log(Level.INFO, "createVarTest received with" + argument1 + " and " + argument2);
+                Logger.getLogger("logger").log(Level.INFO, "createVarTest received with " + argument1 + " and " + argument2);
                 break;
             case "createVarGame":
-                Logger.getLogger("logger").log(Level.INFO, "createVarGame received with" + argument1 + " and " + argument2);
+                Logger.getLogger("logger").log(Level.INFO, "createVarGame received with " + argument1 + " and " + argument2);
                 break;
         }
     }
