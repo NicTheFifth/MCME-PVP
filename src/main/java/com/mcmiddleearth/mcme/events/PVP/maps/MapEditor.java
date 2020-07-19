@@ -272,5 +272,4 @@ public class MapEditor implements CommandExecutor, Listener{
             }
         return true;
     }
-    
 }

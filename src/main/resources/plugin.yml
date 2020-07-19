@@ -34,3 +34,37 @@ commands:
     description: Send a message to players on your team
     usage: /t <message>
 permissions:
+  pvp.join:
+    description: Can join even when server is locked.
+    default: op
+  pvp.gameKick:
+    description: Can kick players from pvp server.
+    default: op
+  pvp.gameCanRun:
+    description: Can run games on pvp server.
+    default: op
+  pvp.mapCreate:
+    description: Can create maps on pvp server.
+    default: op
+  pvp.adminPermission:
+    description: Can do everything with the pvp plugin.
+    default: op
+  pvp.builder:
+    children:
+      pvp.join: true
+  pvp.mapCreator:
+    children:
+      pvp.builder: true
+      pvp.mapCreate: true
+  pvp.moderator:
+    children:
+      pvp.gameKick: true
+  pvp.manager:
+    children:
+      pvp.gameCanRun: true
+  pvp.admin:
+    children:
+      pvp.mapCreator: true
+      pvp.manager: true
+      pvp.moderator: true
+      pvp.adminPermission: true

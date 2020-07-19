@@ -23,6 +23,7 @@ import com.mcmiddleearth.mcme.events.Main;
 import com.mcmiddleearth.mcme.events.PVP.Gamemode.BasePluginGamemode;
 import com.mcmiddleearth.mcme.events.PVP.Gamemode.BasePluginGamemode.GameState;
 import com.mcmiddleearth.mcme.events.PVP.Gamemode.anticheat.AntiCheatListeners;
+import com.mcmiddleearth.mcme.events.PVP.command.PVPCommand;
 import com.mcmiddleearth.mcme.events.PVP.maps.Map;
 import com.mcmiddleearth.mcme.events.PVP.PVPCommandCore;
 import com.mcmiddleearth.mcme.events.PVP.PVPCore;
@@ -136,7 +137,7 @@ public class JoinLeaveHandler implements Listener{
                         //p.setResourcePack("http://www.mcmiddleearth.com/content/Eriador.zip");
                         p.sendMessage(ChatColor.GREEN + "Upcoming Game: " + ChatColor.BLUE + m.getGmType() + ChatColor.GREEN + " on " + ChatColor.RED + m.getTitle());
                         p.sendMessage(ChatColor.YELLOW + "Use " + ChatColor.GREEN + "/pvp join" + ChatColor.YELLOW + " to join!");
-                        p.sendMessage(ChatColor.GREEN + "Do /pvp rules " + PVPCommandCore.removeSpaces(PVPCommandCore.getQueuedGame().getGmType()) + " if you don't know how this gamemode works!");
+                        p.sendMessage(ChatColor.GREEN + "Do /pvp rules " + PVPCommand.removeSpaces(PVPCommandCore.getQueuedGame().getGmType()) + " if you don't know how this gamemode works!");
                     }
                 }
             }

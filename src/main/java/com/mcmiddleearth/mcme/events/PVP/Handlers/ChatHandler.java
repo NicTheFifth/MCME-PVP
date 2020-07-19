@@ -42,7 +42,7 @@ public class ChatHandler extends PlaceholderHook implements Listener {
         if(playerPrefixes.containsKey(p.getName())){
             return playerPrefixes.get(p.getName()) + " " + p.getName() + ChatColor.RESET + ": " + "%2$s";
         }else{
-            if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())){
+            if(p.hasPermission(Permissions.CREATE.getPermissionNode())){
                 return ChatColor.GOLD + "Staff" + " " + p.getName() + ChatColor.RESET + ": " + "%2$s";
             }else{
                 return ChatColor.GRAY + "Lobby" + " " + p.getName() + ChatColor.RESET + ": " + "%2$s";
@@ -65,7 +65,7 @@ public class ChatHandler extends PlaceholderHook implements Listener {
                 if(playerPrefixes.containsKey(p.getName())) {
                     return playerPrefixes.get(p.getName()) + " " + p.getName() + ChatColor.RESET + ": ";
                 } else {
-                    if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())){
+                    if(p.hasPermission(Permissions.CREATE.getPermissionNode())){
                         return ChatColor.GOLD + "PvP Staff" + " " + p.getName() + ChatColor.RESET + ": " ;
                     }else{
                         return ChatColor.GRAY + "Lobby" + " " + p.getName() + ChatColor.RESET + ": " ;
@@ -75,7 +75,7 @@ public class ChatHandler extends PlaceholderHook implements Listener {
                 if(playerPrefixes.containsKey(p.getName())) {
                     return ""+playerColors.get(p.getName());
                 } else {
-                    if(p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())){
+                    if(p.hasPermission(Permissions.CREATE.getPermissionNode())){
                         return ""+ChatColor.GOLD;
                     }else{
                         return ""+ChatColor.GRAY;

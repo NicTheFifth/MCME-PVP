@@ -30,9 +30,11 @@ import java.util.Map;
  */
 public enum Permissions {
     
-    LOCKER               ("mcmeevent.pvp.locker",            PermissionDefault.OP),
-    PVP_MANAGER            ("mcmeevent.pvp.manager",           PermissionDefault.OP),
-    PVP_ADMIN            ("mcmeevent.pvp.admin",           PermissionDefault.OP);
+    JOIN               ("pvp.join",            PermissionDefault.OP),
+    KICK            ("pvp.gameKick",           PermissionDefault.OP),
+    RUN            ("pvp.gameCanRun",           PermissionDefault.OP),
+    CREATE            ("pvp.mapCreate",           PermissionDefault.OP),
+    PVP_ADMIN            ("pvp.adminPermission",           PermissionDefault.OP);
 
 
     private final String permissionNode;

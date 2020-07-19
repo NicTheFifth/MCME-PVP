@@ -9,6 +9,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import net.md_5.bungee.chat.SelectorComponentSerializer;
+import org.bukkit.ChatColor;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -25,8 +27,10 @@ public class CommandIntVariableArgument implements ArgumentType<String> {
     public String parse(StringReader reader) throws CommandSyntaxException {
         String o = reader.readString();
         try {
-            Integer.parseInt(o);
-            return o;
+            if(Integer.parseInt(o) > 0)
+                return o;
+            else
+                throw new CommandSyntaxException(new SimpleCommandExceptionType(new LiteralMessage("Failed parsing during action evaluation")), new LiteralMessage("Failed parsing during action evaluation on action:" + o));
         }
         catch(Exception e){
         throw new CommandSyntaxException(new SimpleCommandExceptionType(new LiteralMessage("Failed parsing during action evaluation")), new LiteralMessage("Failed parsing during action evaluation on action:" + o));

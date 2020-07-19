@@ -52,11 +52,11 @@ public class Locker implements CommandExecutor, TabCompleter, Listener{
     
     @Override
     public boolean onCommand(CommandSender cs, Command cmnd, String string, String[] args) {
-        if(cs.hasPermission(Permissions.LOCKER.getPermissionNode())){
+        if(cs.hasPermission(Permissions.RUN.getPermissionNode())){
             if(args.length > 0){
                 if(args[0].equalsIgnoreCase("kickall")){
                     for(Player p : Bukkit.getOnlinePlayers()){
-                        if(!p.hasPermission(Permissions.LOCKER.getPermissionNode())){
+                        if(!p.hasPermission(Permissions.RUN.getPermissionNode())){
                             //p.kickPlayer("PvP manager kicked all players");
                             p.sendMessage("A PvP manager kicked all players");
                             sendPlayerToMain(p);
@@ -80,8 +80,7 @@ public class Locker implements CommandExecutor, TabCompleter, Listener{
                         locked = true;
                         Message = "Server Locked!";
                         for(Player p : Bukkit.getOnlinePlayers()){
-                            if(!p.hasPermission(Permissions.LOCKER.getPermissionNode())){
-                                //p.kickPlayer("Server locked");
+                            if(!p.hasPermission(Permissions.JOIN.getPermissionNode())){
                                 p.sendMessage(Message);
                                 sendPlayerToMain(p);
                             }
@@ -99,7 +98,7 @@ public class Locker implements CommandExecutor, TabCompleter, Listener{
         List<String> Flist = new ArrayList<>();
         Player p = (Player) cs;
         if (
-        cmd.getName().equalsIgnoreCase("locker") && ((p.hasPermission(Permissions.PVP_MANAGER.getPermissionNode())) || (p.
+        cmd.getName().equalsIgnoreCase("locker") && ((p.hasPermission(Permissions.RUN.getPermissionNode())) || (p.
         hasPermission(Permissions.PVP_ADMIN.getPermissionNode())))){
             arguments.add("lock");
             arguments.add("kickall");
@@ -126,18 +125,10 @@ public class Locker implements CommandExecutor, TabCompleter, Listener{
     }
     
     @EventHandler
-    public void onPlayerLeave(PlayerQuitEvent event) {
-        if(Bukkit.getOnlinePlayers().isEmpty()
-                || Bukkit.getOnlinePlayers().stream().allMatch(player -> player.equals(event.getPlayer()))) {
-            locked = true;
-        }
-    }
-    
-    @EventHandler
     public void onPlayerLogin(PlayerJoinEvent e){
 ///Logger.getGlobal().info("Player login: "  +locked+ " "+e.getPlayer().hasPermission(Permissions.LOCKER.getPermissionNode()));
 //Logger.getGlobal().info("Player allowed: "+(locked && !e.getPlayer().hasPermission(Permissions.LOCKER.getPermissionNode())));
-        if(locked && !e.getPlayer().hasPermission(Permissions.LOCKER.getPermissionNode())){
+        if(locked && !e.getPlayer().hasPermission(Permissions.JOIN.getPermissionNode())){
 ///Logger.getGlobal().info("Player kick! ");
             e.getPlayer().sendMessage(Message);
             new BukkitRunnable() {

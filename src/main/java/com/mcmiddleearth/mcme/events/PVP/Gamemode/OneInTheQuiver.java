@@ -26,6 +26,7 @@ import com.mcmiddleearth.mcme.events.PVP.Handlers.GearHandler.SpecialGear;
 import com.mcmiddleearth.mcme.events.PVP.PVPCore;
 import com.mcmiddleearth.mcme.events.PVP.PlayerStat;
 import com.mcmiddleearth.mcme.events.PVP.Team;
+import com.mcmiddleearth.mcme.events.PVP.command.PVPCommand;
 import com.mcmiddleearth.mcme.events.PVP.maps.Map;
 import com.mcmiddleearth.mcme.events.Util.EventLocation;
 import org.bukkit.Bukkit;
@@ -338,6 +339,7 @@ public class OneInTheQuiver extends BasePluginGamemode{
         mostDeaths.clear();
         mostKills.clear();
         highestKd.clear();
+        PVPCommand.queueNextGame();
         super.End(m);
     }
     

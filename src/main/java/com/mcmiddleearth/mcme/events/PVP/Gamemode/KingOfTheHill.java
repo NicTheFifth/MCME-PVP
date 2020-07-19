@@ -20,6 +20,7 @@ package com.mcmiddleearth.mcme.events.PVP.Gamemode;
 
 import com.mcmiddleearth.mcme.events.Main;
 import com.mcmiddleearth.mcme.events.PVP.Team;
+import com.mcmiddleearth.mcme.events.PVP.command.PVPCommand;
 import com.mcmiddleearth.mcme.events.PVP.maps.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -193,6 +194,7 @@ public class KingOfTheHill extends BasePluginGamemode{
             Team.removeFromTeam(p);
         }
         m.playerLeaveAll();
+        PVPCommand.queueNextGame();
         super.End(m);
 
     }

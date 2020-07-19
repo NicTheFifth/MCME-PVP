@@ -26,6 +26,7 @@ import com.mcmiddleearth.mcme.events.PVP.PVPCore;
 import com.mcmiddleearth.mcme.events.PVP.PlayerStat;
 import com.mcmiddleearth.mcme.events.PVP.Team;
 import com.mcmiddleearth.mcme.events.PVP.Team.Teams;
+import com.mcmiddleearth.mcme.events.PVP.command.PVPCommand;
 import com.mcmiddleearth.mcme.events.PVP.maps.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -265,7 +266,8 @@ public class Ringbearer extends BasePluginGamemode{//Handled by plugin
         blueBearer = null;
         
         m.playerLeaveAll();
-        
+
+        PVPCommand.queueNextGame();
         super.End(m);
     }
         

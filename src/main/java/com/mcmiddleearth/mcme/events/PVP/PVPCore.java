@@ -83,15 +83,15 @@ public class PVPCore implements Event{
         CLog.println(maps);
         Main.getPlugin().getCommand("pvp").setExecutor(new PVPCommandCore());
         Main.getPlugin().getCommand("pvp").setTabCompleter(new PVPCommandCore());
-        Main.getPlugin().getCommand("locker").setExecutor(new Locker());
-        Main.getPlugin().getCommand("locker").setTabCompleter(new Locker());
+        Main.getPlugin().getCommand("locker").setExecutor(new PVPCommandCore());
+        Main.getPlugin().getCommand("locker").setTabCompleter(new PVPCommandCore());
         Main.getPlugin().getCommand("t").setExecutor(new TeamChat());
         PluginManager pm = Main.getServerInstance().getPluginManager();
         pm.registerEvents(new MapEditor(), Main.getPlugin());
 //        pm.registerEvents(new PlayerStat.StatLitener(), Main.getPlugin());
         pm.registerEvents(new Lobby.SignClickListener(), Main.getPlugin());
         pm.registerEvents(new ChatHandler(), Main.getPlugin());
-        pm.registerEvents(new Locker(), Main.getPlugin());
+        pm.registerEvents(new ServerMessageHandler(), Main.getPlugin());
         pm.registerEvents(new JoinLeaveHandler(), Main.getPlugin());
         pm.registerEvents(new AllGameHandlers(), Main.getPlugin());
         pm.registerEvents(new PlayerStat.StatListener(), Main.getPlugin());

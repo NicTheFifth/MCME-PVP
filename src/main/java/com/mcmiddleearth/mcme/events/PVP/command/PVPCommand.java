@@ -19,16 +19,28 @@
 package com.mcmiddleearth.mcme.events.PVP.command;
 
 import com.google.common.collect.Lists;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import com.mcmiddleearth.mcme.events.Main;
+import com.mcmiddleearth.mcme.events.PVP.Gamemode.BasePluginGamemode.GameState;
+import com.mcmiddleearth.mcme.events.PVP.Handlers.BukkitTeamHandler;
+import com.mcmiddleearth.mcme.events.PVP.Handlers.ChatHandler;
+import com.mcmiddleearth.mcme.events.PVP.PVPCommandCore;
+import com.mcmiddleearth.mcme.events.PVP.PVPCore;
+import com.mcmiddleearth.mcme.events.PVP.PlayerStat;
 import com.mcmiddleearth.mcme.events.PVP.maps.Map;
+import com.mcmiddleearth.mcme.events.Permissions;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import org.bukkit.ChatColor;
+import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.File;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -38,6 +50,14 @@ public class PVPCommand extends CommandDispatcher<Player>{
     private final Main main;
     private static HashMap<String, Map> maps;
     private static Set<String> mapNames;
+    private static volatile boolean locked = true;
+    private static String Message = "PvP-server Locked";
+    private static Queue<Map> gameQueue = new LinkedList<>();
+    private static Queue<Integer> parameterQueue = new LinkedList<>();;
+    private static Map nextGame = null;
+    private static int parameter;
+    protected static Map runningGame = null;
+
     public PVPCommand(Main main) {
         this.main = main;
         this.maps = Map.maps;
@@ -133,45 +153,174 @@ public class PVPCommand extends CommandDispatcher<Player>{
             .then(LiteralArgumentBuilder.<Player>literal("lobby").executes(c -> {
                 doCommand("lobby", c.getSource());
                 return 1;} ))
+            .then(LiteralArgumentBuilder.<Player>literal("broadcast").executes(c->{
+                doCommand("broadcast", c.getSource());
+                return 1;
+            }))
         );
-    }
-
-    private boolean hasPermission(Player source, String permission){
-        return source.hasPermission(permission);
+        register(LiteralArgumentBuilder.<Player>literal("locker").requires(s -> s.getPlayer().hasPermission( "CREATE"))
+            .then(LiteralArgumentBuilder.<Player>literal("lock").executes( c -> {
+                doCommand("toggleLock", c.getSource());
+                return 1; }))
+            .then(LiteralArgumentBuilder.<Player>literal("kickall").executes( c -> {
+                doCommand("kickall", c.getSource());
+                return 1; })));
     }
 
     private void doCommand(String action, Player source) {
         Logger.getLogger("logger");
         switch (action) {
             case "mapList":
-                Logger.getLogger("logger").log(Level.INFO, "mapList command received");
+                for(String m: mapNames)
+                    source.sendMessage(ChatColor.GREEN + maps.get(m).getName() + ChatColor.WHITE + " | " + ChatColor.BLUE + maps.get(m).getTitle());
                 break;
             case "setArea":
                 Logger.getLogger("logger").log(Level.INFO, "setArea command received");
                 break;
             case "startGame":
-                Logger.getLogger("logger").log(Level.INFO, "startGame command received");
+                if(nextGame == null){
+                    source.sendMessage(ChatColor.RED + "Can't start! No game is queued!");
+                } else if(nextGame.getGm().getPlayers().size() == 0 ){
+                    source.sendMessage(ChatColor.RED + "Can't start! No players have joined!");
+                } else if(runningGame == null){
+                    nextGame.getGm().Start(nextGame, parameter);
+                    runningGame = nextGame;
+                    nextGame = null;
+                }
+                else{
+                    source.sendMessage(ChatColor.RED + "Can't start! There's already a game running!");
+                }
                 break;
             case "endGame":
-                Logger.getLogger("logger").log(Level.INFO, "endGame command received");
+                if(nextGame != null){
+                    nextGame.getGm().getPlayers().clear();
+                    nextGame = null;
+                    for(Player pl : Bukkit.getOnlinePlayers()){
+                        ChatHandler.getPlayerColors().put(pl.getName(), ChatColor.WHITE);
+                        pl.setPlayerListName(ChatColor.WHITE + pl.getName());
+                        pl.setDisplayName(ChatColor.WHITE + pl.getName());
+                        BukkitTeamHandler.removeFromBukkitTeam(pl);
+                        pl.sendMessage(ChatColor.GRAY + "The queued game was canceled! You'll need to rejoin when another game is queued.");
+                    }
+                    ChatHandler.getPlayerPrefixes().clear();
+                    if(!gameQueue.isEmpty() && !parameterQueue.isEmpty()) {
+                        nextGame = gameQueue.poll();
+                        parameter = parameterQueue.poll();
+                        source.sendMessage("Map: " + nextGame.getTitle() + ", Gamemode: " + nextGame.getGmType() + ", Parameter: "+ parameter + "\nIf you wish to announce the game type /pvp broadcast!");
+                    }
+                } else if(runningGame != null){
+
+                    for(Player pl : Bukkit.getOnlinePlayers()){
+                        pl.sendMessage(ChatColor.GRAY + runningGame.getGmType() + " on " + runningGame.getTitle() + " was ended by a staff!");
+                    }
+                    runningGame.getGm().End(runningGame);
+                }
+                else  {
+                    source.sendMessage(ChatColor.GRAY + "There is no game to end!");
+                }
                 break;
-            case "getGame":
-                Logger.getLogger("logger").log(Level.INFO, "getGame command received");
+            case "getGames":
+                Logger.getLogger("logger").log(Level.INFO, "getGames command received");
                 break;
             case "join":
-                Logger.getLogger("logger").log(Level.INFO, "join command received");
+                Map m = null;
+
+                if(nextGame != null){
+                    m = nextGame;
+                }
+                else if(runningGame != null){
+                    m = runningGame;
+                }
+                else{
+                    source.sendMessage(ChatColor.RED + "There is no queued or running game!");
+                    break;
+                }
+
+                if(!m.getGm().getPlayers().contains(source) && m.getGm().getState() != GameState.COUNTDOWN){
+                    if(m.playerJoin(source)){
+
+                        if(m.getGm().getState() == GameState.IDLE){
+                            source.setPlayerListName(ChatColor.GREEN + source.getName());
+                            source.setDisplayName(ChatColor.GREEN + source.getName());
+                            ChatHandler.getPlayerColors().put(source.getName(), ChatColor.GREEN);
+                            ChatHandler.getPlayerPrefixes().put(source.getName(), ChatColor.GREEN + "Participant");
+                            BukkitTeamHandler.addToBukkitTeam(source, ChatColor.GREEN);
+                        }
+                    }
+                    else{
+                        source.sendMessage("Failed to Join Map");
+                        break;
+                    }
+                }
+                else if(m.getGm().getState() == GameState.COUNTDOWN){
+                    source.sendMessage(ChatColor.RED + "Do " + ChatColor.GREEN + "/pvp join" + ChatColor.RED + " again once the countdown is done!");
+                }
+                else{
+                    source.sendMessage("You are already part of a game");
+                    break;
+                }
+                source.setGameMode(GameMode.CREATIVE);
+                source.setGameMode(GameMode.SURVIVAL);
                 break;
             case "stats":
-                Logger.getLogger("logger").log(Level.INFO, "stats command received");
+                PlayerStat ps = PlayerStat.getPlayerStats().get(source.getDisplayName());
+
+                source.sendMessage(ChatColor.GREEN + "Showing stats for " + source);
+                source.sendMessage(ChatColor.GRAY + "Kills: " + ps.getKills());
+                source.sendMessage(ChatColor.GRAY + "Deaths: " + ps.getDeaths());
+                source.sendMessage(ChatColor.GRAY + "Games Played: " + ps.getGamesPlayed());
+                source.sendMessage(ChatColor.GRAY + "    Won: " + ps.getGamesWon());
+                source.sendMessage(ChatColor.GRAY + "    Lost: " + ps.getGamesLost());
+                source.sendMessage(ChatColor.GRAY + "Games Spectated: " + ps.getGamesSpectated());
                 break;
             case "statsClear":
-                Logger.getLogger("logger").log(Level.INFO, "statsClear command received");
+                for(File f : new File(PVPCore.getSaveLoc() + Main.getFileSep() + "stats").listFiles()){
+                    f.delete();
+                }
+
+                for(PlayerStat pS : PlayerStat.getPlayerStats().values()) {
+                    pS.setKills(0);
+                    pS.setDeaths(0);
+                    pS.setGamesLost(0);
+                    pS.setGamesWon(0);
+                    pS.setGamesSpectated(0);
+                    pS.setGamesPlayed(0);
+                    pS.getPlayersKilled().clear();
+                }
                 break;
             case "toggleVoxel":
                 Logger.getLogger("logger").log(Level.INFO, "toggleVoxel command received");
                 break;
             case "lobby":
                 Logger.getLogger("logger").log(Level.INFO, "lobby command received");
+                break;
+            case "broadcast":
+                sendBroadcast(source, nextGame);
+            case "toggleLock":
+                if(locked){
+                    source.sendMessage("Server Unlocked!");
+                    locked = false;
+                }
+                else{
+                    source.sendMessage("Server Locked!");
+                    locked = true;
+                    Message = "Server Locked!";
+                    for(Player p : Bukkit.getOnlinePlayers()){
+                        if(!p.hasPermission(Permissions.JOIN.getPermissionNode())){
+                            p.sendMessage(Message);
+                            sendPlayerToMain(p);
+                        }
+                    }
+                }
+                break;
+            case "kickall":
+                for(Player p : Bukkit.getOnlinePlayers()){
+                    if(!p.hasPermission(Permissions.JOIN.getPermissionNode())){
+                        p.sendMessage("A PvP manager kicked all players");
+                        sendPlayerToMain(p);
+                    }
+                }
+                source.sendMessage("All players kicked!");
                 break;
         }
     }
@@ -191,16 +340,86 @@ public class PVPCommand extends CommandDispatcher<Player>{
                 Logger.getLogger("logger").log(Level.INFO, "setGamemode received with " + argument);
                 break;
             case "createTest":
-                Logger.getLogger("logger").log(Level.INFO, "createTest received with " + argument);
+                Map m = Map.maps.get(argument);
+                if(m.getGm().requiresParameter().equals("none"))
+                {
+                    if(nextGame==null) {
+                        source.sendMessage("Map: " + m.getTitle() + ", Gamemode: " + m.getGmType());
+                        parameter = 0;
+                        nextGame = m;
+                    }else{
+                        source.sendMessage("Map: " + m.getTitle() + ", Gamemode: " + m.getGmType() + " is queued!");
+                        gameQueue.add(m);
+                        parameterQueue.add(0);
+                    }
+                }
+                else{
+                    source.sendMessage(m.getTitle() + " " + m.getGmType() + " requires a variable!");
+                }
                 break;
             case "createGame":
-                Logger.getLogger("logger").log(Level.INFO, "createGame received with " + argument);
+                Map n = Map.maps.get(argument);
+                if(n.getGm().requiresParameter().equals("none"))
+                {
+                    if(nextGame==null) {
+                        source.sendMessage("Map: " + n.getTitle() + ", Gamemode: " + n.getGmType());
+                        sendBroadcast(source,n);
+                        parameter = 0;
+                        nextGame = n;
+                    }else{
+                        source.sendMessage("Map: " + n.getTitle() + ", Gamemode: " + n.getGmType() + " is queued!");
+                        gameQueue.add(n);
+                        parameterQueue.add(0);
+                    }
+                }
+                else{
+                    source.sendMessage(n.getTitle() + " " + n.getGmType() + " requires a variable!");
+                }
+
                 break;
             case "kickPlayer":
                 Logger.getLogger("logger").log(Level.INFO, "kickPlayer received with " + argument);
                 break;
             case "rules":
-                Logger.getLogger("logger").log(Level.INFO, "rules received with " + argument);
+                switch(argument) {
+                    case "freeforall":
+                        source.sendMessage(ChatColor.GREEN + "Free For All Rules");
+                        source.sendMessage(ChatColor.GRAY + "Every man for himself, madly killing everyone! Highest number of kills wins.");
+                        break;
+                    case "infected":
+                        source.sendMessage(ChatColor.GREEN + "Infected Rules");
+                        source.sendMessage(ChatColor.GRAY + "Everyone starts as a Survivor, except one person, who is Infected. Infected gets a Speed effect, but has less armor");
+                        source.sendMessage(ChatColor.GRAY + "If a Survivor is killed, they become Infected. Infected players have infinite respawns");
+                        source.sendMessage(ChatColor.GRAY + "If all Survivors are infected, Infected team wins. If the time runs out with Survivors remaining, Survivors win.");
+                        break;
+                    case "oneinthequiver":
+                        source.sendMessage(ChatColor.GREEN + "One in the Quiver Rules");
+                        source.sendMessage(ChatColor.GRAY + "Everyone gets an axe, a bow, and one arrow, which kills in 1 shot if the bow is fully drawn.");
+                        source.sendMessage(ChatColor.GRAY + "Every man is fighting for himself. If they get a kill or die, they get another arrow, up to a max of 5 arrows");
+                        source.sendMessage(ChatColor.GRAY + "First to 21 kills wins.");
+                        break;
+                    case "ringbearer":
+                        source.sendMessage(ChatColor.GREEN + "Ringbearer Rules");
+                        source.sendMessage(ChatColor.GRAY + "Two teams, each with a ringbearer, who gets The One Ring (which of course gives invisibility)");
+                        source.sendMessage(ChatColor.GRAY + "As long as the ringbearer is alive, the team can respawn.");
+                        source.sendMessage(ChatColor.GRAY + "Once the ringbearer dies, that team cannot respawn. The first team to run out of members loses.");
+                        break;
+                    case "teamconquest":
+                        source.sendMessage(ChatColor.GREEN + "Team Conquest Rules");
+                        source.sendMessage(ChatColor.GRAY + "Two teams. There are 3 beacons, which each team can capture by repeatedly right clicking the beacon.");
+                        source.sendMessage(ChatColor.GRAY + "Points are awarded on kills, based on the difference between each team's number of beacons.");
+                        source.sendMessage(ChatColor.GRAY + "i.e. if Red has 3 beacons and Blue has 0, Red gets 3 point per kill. If Red has 1 and Blue has 2, Red doesn't get points for a kill.");
+                        source.sendMessage(ChatColor.GRAY + "First team to a certain point total wins.");
+                        break;
+                    case "teamdeathmatch":
+                        source.sendMessage(ChatColor.GREEN + "Team Deathmatch Rules");
+                        source.sendMessage(ChatColor.GRAY + "Two teams, and no respawns. First team to run out of players loses.");
+                        break;
+                    case "teamslayer":
+                        source.sendMessage(ChatColor.GREEN + "Team Slayer Rules");
+                        source.sendMessage(ChatColor.GRAY + "Two teams, and infinite respawns. 1 point per kill. First team to a certain point total wins.");
+                        break;
+                }
                 break;
             case "deleteMap":
                 Logger.getLogger("logger").log(Level.INFO, "deleteMap received with " + argument);
@@ -214,11 +433,92 @@ public class PVPCommand extends CommandDispatcher<Player>{
                 Logger.getLogger("logger").log(Level.INFO, "mapPointCreate received with " + argument1 + " and " + argument2);
                 break;
             case "createVarTest":
-                Logger.getLogger("logger").log(Level.INFO, "createVarTest received with " + argument1 + " and " + argument2);
+                Map m = Map.maps.get(argument1);
+                if(m.getGm().requiresParameter().equals("none"))
+                {
+                    doCommand("createTest", argument1, source);
+                }
+                else{
+                    if(nextGame == null) {
+                        source.sendMessage("Map: " + m.getTitle() + ", Gamemode: " + m.getGmType() + ", Parameter: "+ argument2);
+                        parameter = Integer.parseInt(argument2);
+                        nextGame = m;
+                    }else{
+                        source.sendMessage("Map: " + m.getTitle() + ", Gamemode: " + m.getGmType() + ", Parameter: "+ argument2 + " is queued!");
+                        gameQueue.add(m);
+                        parameterQueue.add(Integer.parseInt(argument2));
+                    }
+                }
                 break;
             case "createVarGame":
-                Logger.getLogger("logger").log(Level.INFO, "createVarGame received with " + argument1 + " and " + argument2);
+                Map n = Map.maps.get(argument1);
+                if(n.getGm().requiresParameter().equals("none"))
+                {
+                    doCommand("createGame", argument1, source);
+                }
+                else{
+                    if(nextGame == null) {
+                        source.sendMessage("Map: " + n.getTitle() + ", Gamemode: " + n.getGmType() + ", Parameter: "+ argument2);
+                        sendBroadcast(source,n);
+                        parameter = Integer.parseInt(argument2);
+                        nextGame = n;
+                    }else{
+                        source.sendMessage("Map: " + n.getTitle() + ", Gamemode: " + n.getGmType() + ", Parameter: "+ argument2 + " is queued!");
+                        gameQueue.add(n);
+                        parameterQueue.add(Integer.parseInt(argument2));
+                    }
+                }
                 break;
         }
     }
+    private void sendPlayerToMain(Player player) {
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("ConnectOther");
+        out.writeUTF(player.getName());
+        out.writeUTF("world");
+        player.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
+    }
+    private void sendBroadcast(Player player, Map m) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (PVPCommandCore.getRunningGame().getName().equalsIgnoreCase(m.getName())) {
+
+                    ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                    out.writeUTF("Message");
+                    out.writeUTF("ALL");
+                    out.writeUTF("mcme:event");
+                    out.writeUTF(ChatColor.GRAY + player.getName() + " has started a game\n"
+                            + ChatColor.GRAY + "Map: " + ChatColor.GREEN + m.getTitle() + ChatColor.GRAY + ", Gamemode: " + ChatColor.GREEN + m.getGmType() + "\n"
+                            + ChatColor.GRAY + "Use " + ChatColor.GREEN + "/pvp join" + ChatColor.GRAY + " to join the game\n"
+                            + ChatColor.GRAY + "There are only " + m.getMax() + " slots left\n"
+                            + ChatColor.GREEN + "Do /pvp rules " + removeSpaces(m.getGmType()) + " if you don't know how this gamemode works!");
+                    player.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
+                } else {
+                    cancel();
+                }
+
+            }
+        }.runTaskTimer(Main.getPlugin(), 0L, 1200 * Main.getMinutes());
+    }
+    public static String removeSpaces(String s){
+        String newString = "";
+
+        char[] chars = s.toCharArray();
+
+        for(char c : chars){
+            if(c != ' '){ newString += String.valueOf(c); }
+        }
+        return newString;
+    }
+    public static void queueNextGame(){
+        if(!gameQueue.isEmpty() && !parameterQueue.isEmpty()) {
+        nextGame = gameQueue.poll();
+        parameter = parameterQueue.poll();
+        for(Player p : Bukkit.getOnlinePlayers())
+            if(p.hasPermission(Permissions.CREATE.getPermissionNode()))
+                p.sendMessage("Map: " + nextGame.getTitle() + ", Gamemode: " + nextGame.getGmType() + ", Parameter: "+ parameter +"\nIf you wish to announce the game type /pvp broadcast!");
+    }}
+    public static boolean getLocked() { return locked; }
+    public static String getMessage() { return Message; }
 }
