@@ -33,7 +33,6 @@ public enum Permissions {
     JOIN               ("pvp.join",            PermissionDefault.OP),
     KICK            ("pvp.gameKick",           PermissionDefault.OP),
     RUN            ("pvp.gameCanRun",           PermissionDefault.OP),
-    CREATE            ("pvp.mapCreate",           PermissionDefault.OP),
     PVP_ADMIN            ("pvp.adminPermission",           PermissionDefault.OP);
 
 

@@ -18,8 +18,8 @@
  */
 package com.mcmiddleearth.mcme.events.PVP;
 
-import com.mcmiddleearth.mcme.events.PVP.Handlers.BukkitTeamHandler;
-import com.mcmiddleearth.mcme.events.PVP.Handlers.ChatHandler;
+import com.mcmiddleearth.mcme.events.Handlers.BukkitTeamHandler;
+import com.mcmiddleearth.mcme.events.Handlers.ChatHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;

@@ -18,7 +18,6 @@
  */
 package com.mcmiddleearth.mcme.events;
 
-import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -33,16 +32,16 @@ public class ListenerCore implements Listener{
     
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e){
-        if(Main.isBlockprotect()){
-            if(e.getPlayer().getWorld().getName().equals(Main.getPlugin().getSpawnWorld())){
+        if(PVPPlugin.isBlockprotect()){
+            if(e.getPlayer().getWorld().getName().equals(PVPPlugin.getPlugin().getSpawnWorld())){
                 e.setCancelled(true);
             }
         }
     }
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e){
-        if(Main.isBlockprotect()){
-            if(e.getPlayer().getWorld().getName().equals(Main.getPlugin().getSpawnWorld())){
+        if(PVPPlugin.isBlockprotect()){
+            if(e.getPlayer().getWorld().getName().equals(PVPPlugin.getPlugin().getSpawnWorld())){
                 e.setCancelled(true);
             }
         }

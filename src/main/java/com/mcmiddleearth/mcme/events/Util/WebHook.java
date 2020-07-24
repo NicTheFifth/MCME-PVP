@@ -1,20 +1,8 @@
 package com.mcmiddleearth.mcme.events.Util;
 
-import com.mcmiddleearth.mcme.events.Main;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.URL;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Logger;
-import org.bukkit.Bukkit;
+
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitScheduler;
 
 /**
  * 

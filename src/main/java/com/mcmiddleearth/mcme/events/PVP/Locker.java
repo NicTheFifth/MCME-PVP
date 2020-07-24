@@ -20,7 +20,7 @@ package com.mcmiddleearth.mcme.events.PVP;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import com.mcmiddleearth.mcme.events.Main;
+import com.mcmiddleearth.mcme.events.PVPPlugin;
 import com.mcmiddleearth.mcme.events.Permissions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -33,7 +33,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -44,76 +43,11 @@ import java.util.List;
  *
  * @author Donovan <dallen@dallen.xyz>
  */
-public class Locker implements CommandExecutor, TabCompleter, Listener{
+public class Locker implements Listener{
     
     private static volatile boolean locked = true;
     
     private static String Message = "PvP-server Locked";
-    
-    @Override
-    public boolean onCommand(CommandSender cs, Command cmnd, String string, String[] args) {
-        if(cs.hasPermission(Permissions.RUN.getPermissionNode())){
-            if(args.length > 0){
-                if(args[0].equalsIgnoreCase("kickall")){
-                    for(Player p : Bukkit.getOnlinePlayers()){
-                        if(!p.hasPermission(Permissions.RUN.getPermissionNode())){
-                            //p.kickPlayer("PvP manager kicked all players");
-                            p.sendMessage("A PvP manager kicked all players");
-                            sendPlayerToMain(p);
-                        }
-                    }
-                    cs.sendMessage("Kicked all!");
-                }
-                else if(args[0].equalsIgnoreCase("lock")){
-                    if(args.length > 1){
-                        Message = "";
-                        for(int i = 1; i < args.length; i++){
-                            Message = Message.concat(args[i] + " ");
-                        }
-                    }
-                    if(locked){
-                        cs.sendMessage("Server Unlocked!");
-                        locked = false;
-                    }
-                    else{
-                        cs.sendMessage("Server Locked!");
-                        locked = true;
-                        Message = "Server Locked!";
-                        for(Player p : Bukkit.getOnlinePlayers()){
-                            if(!p.hasPermission(Permissions.JOIN.getPermissionNode())){
-                                p.sendMessage(Message);
-                                sendPlayerToMain(p);
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
-            cs.sendMessage(ChatColor.RED + "You don't have the permission to lock the server!");
-        }
-        return true;
-    }
-    public List<String> onTabComplete(CommandSender cs, Command cmd, String label, String[] args) {
-        List<String> arguments = new ArrayList<>();
-        List<String> Flist = new ArrayList<>();
-        Player p = (Player) cs;
-        if (
-        cmd.getName().equalsIgnoreCase("locker") && ((p.hasPermission(Permissions.RUN.getPermissionNode())) || (p.
-        hasPermission(Permissions.PVP_ADMIN.getPermissionNode())))){
-            arguments.add("lock");
-            arguments.add("kickall");
-        }
-        if (args.length == 1) {
-            for (String s : arguments) {
-                if (s.toLowerCase().startsWith(args[0].toLowerCase())) {
-                    Flist.add(s);
-                }
-            }
-            return Flist;
-        } else {
-            return null;
-        }
-    }
 
 
     @EventHandler (priority = EventPriority.HIGHEST)
@@ -136,7 +70,7 @@ public class Locker implements CommandExecutor, TabCompleter, Listener{
                 public void run() {
                     sendPlayerToMain(e.getPlayer());
                 }
-            }.runTaskLater(Main.getPlugin(),1);
+            }.runTaskLater(PVPPlugin.getPlugin(),1);
             //e.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.BLUE + Message);
         }
     }
@@ -147,6 +81,6 @@ public class Locker implements CommandExecutor, TabCompleter, Listener{
         out.writeUTF("ConnectOther");
         out.writeUTF(player.getName());
         out.writeUTF("world");
-        player.sendPluginMessage(Main.getPlugin(), "BungeeCord", out.toByteArray());
+        player.sendPluginMessage(PVPPlugin.getPlugin(), "BungeeCord", out.toByteArray());
     }
 }

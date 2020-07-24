@@ -2,10 +2,6 @@ worlds:
 - world
 noHunger:
 - world
-WinterEvent:
-    Enabled: false
-SummerEvent:
-    Enabled: false
 PVP:
     Enabled: true
     Broadcast_minutes: 2

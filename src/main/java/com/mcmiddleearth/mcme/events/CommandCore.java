@@ -60,7 +60,7 @@ public class CommandCore implements TabExecutor{
                         }
                         if(p.hasPermission("event.loadworld")){
                             p.sendMessage("World Backups");
-                            for(File f: Main.getPlugin().getDataFolder().listFiles()){
+                            for(File f: PVPPlugin.getPlugin().getDataFolder().listFiles()){
                                 p.sendMessage(f.getName());
                             }
                         }
@@ -68,7 +68,7 @@ public class CommandCore implements TabExecutor{
                     }
                 }
             }else if(cmd.getName().equalsIgnoreCase("worldjump")){
-                World spawn = Bukkit.getWorld(Main.getPlugin().getSpawnWorld());
+                World spawn = Bukkit.getWorld(PVPPlugin.getPlugin().getSpawnWorld());
                 Player p = (Player) sender;
                 if(args.length>0&&p.hasPermission("event.jump")){
                     if(!p.getWorld().equals(spawn)&&!args[0].equalsIgnoreCase(spawn.getName())){

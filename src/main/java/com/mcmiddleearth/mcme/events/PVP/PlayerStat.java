@@ -20,10 +20,11 @@ package com.mcmiddleearth.mcme.events.PVP;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.mcmiddleearth.mcme.events.Main;
-import com.mcmiddleearth.mcme.events.PVP.Handlers.JoinLeaveHandler;
+import com.mcmiddleearth.mcme.events.PVPPlugin;
+import com.mcmiddleearth.mcme.events.Handlers.JoinLeaveHandler;
 import com.mcmiddleearth.mcme.events.PVP.Team.Teams;
 import com.mcmiddleearth.mcme.events.Util.DBmanager;
+import com.mcmiddleearth.mcme.events.command.PVPCommand;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -60,7 +61,7 @@ public class PlayerStat {
     public PlayerStat(UUID uuid){this.uuid = uuid;}
     
     public static boolean loadStat(OfflinePlayer p){
-        File loc = new File(PVPCore.getSaveLoc() + Main.getFileSep() + "stats" + Main.getFileSep() + p.getUniqueId());
+        File loc = new File(PVPPlugin.getStatDirectory() + PVPPlugin.getFileSep() + p.getUniqueId());
         if(loc.exists()){
             PlayerStat ps = (PlayerStat) DBmanager.loadObj(PlayerStat.class, loc);
             ps.setUuid(p.getUniqueId());
@@ -79,7 +80,7 @@ public class PlayerStat {
     }
         
     public void saveStat(){
-        File loc = new File(PVPCore.getSaveLoc() + Main.getFileSep() + "stats");
+        File loc = PVPPlugin.getStatDirectory();
         try {
             System.out.println("Saved: " + DBmanager.getJSonParser().writeValueAsString(this));
         } catch (JsonProcessingException ex) {
@@ -162,13 +163,13 @@ public class PlayerStat {
         
         @EventHandler
         public void onPlayerDeath(PlayerDeathEvent e){
-            if(PVPCommandCore.getRunningGame() != null){
+            if(PVPCommand.getRunningGame() != null){
                 Player d = e.getEntity();
-                if(PVPCommandCore.getRunningGame().getGm().getPlayers().contains(d)){
+                if(PVPCommand.getRunningGame().getGm().getPlayers().contains(d)){
                     PlayerStat ps = PlayerStat.getPlayerStats().get(d.getName());
                     if(d.getKiller() != null){
                         Player k = d.getKiller();
-                        if(PVPCommandCore.getRunningGame().getGm().getPlayers().contains(k)){
+                        if(PVPCommand.getRunningGame().getGm().getPlayers().contains(k)){
                             if(!PlayerStat.getPlayerStats().get(k.getName()).getPlayersKilled().contains(d.getName())){
                                 PlayerStat.getPlayerStats().get(k.getName()).addPlayerKilled(d.getName());
                             }

@@ -19,8 +19,8 @@
 package com.mcmiddleearth.mcme.events.Util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.mcmiddleearth.mcme.events.Main;
-import com.mcmiddleearth.mcme.events.PVP.maps.MapEditor;
+import com.mcmiddleearth.mcme.events.PVPPlugin;
+import com.mcmiddleearth.mcme.events.maps.MapEditor;
 import java.util.logging.Level;
 
 /**
@@ -29,7 +29,7 @@ import java.util.logging.Level;
  */
 public class CLog {
     public static void println(Object obj){
-        if(Main.isDebug()){
+        if(PVPPlugin.isDebug()){
             if(obj instanceof String){
                 System.out.println(obj);
             }else{

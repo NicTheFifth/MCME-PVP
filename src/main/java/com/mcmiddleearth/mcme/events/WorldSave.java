@@ -43,7 +43,7 @@ public class WorldSave {
     
     public static void saveWorld(final World w, final String name, final Player sender){
         w.save();
-        World notw = Bukkit.getWorld(Main.getPlugin().getSpawnWorld());
+        World notw = Bukkit.getWorld(PVPPlugin.getPlugin().getSpawnWorld());
         if(notw == null){
             for(Player p : Bukkit.getOnlinePlayers()){
                 p.kickPlayer("reseting world");
@@ -56,11 +56,11 @@ public class WorldSave {
             }
         }
         final File old = w.getWorldFolder();
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PVPPlugin.getPlugin(), new Runnable() {
                     @Override
                     public void run() {   
-                        copyWorld(old, new File(Main.getPlugin().getDataFolder()+ System.getProperty("file.separator") + name));
-                        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
+                        copyWorld(old, new File(PVPPlugin.getPlugin().getDataFolder()+ System.getProperty("file.separator") + name));
+                        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PVPPlugin.getPlugin(), new Runnable() {
                             @Override
                             public void run() {   
                                 sender.teleport(w.getSpawnLocation());
@@ -71,11 +71,11 @@ public class WorldSave {
     }
     
     public static boolean loadWorld(World w, final String name){
-        if(!new File(Main.getPlugin().getDataFolder() + System.getProperty("file.separator") + name).exists()){
+        if(!new File(PVPPlugin.getPlugin().getDataFolder() + System.getProperty("file.separator") + name).exists()){
             return false;
         }
         final String wname = w.getName();
-        World notw = Bukkit.getWorld(Main.getPlugin().getSpawnWorld());
+        World notw = Bukkit.getWorld(PVPPlugin.getPlugin().getSpawnWorld());
         if(notw == null){
             for(Player p : Bukkit.getOnlinePlayers()){
                 p.kickPlayer("reseting world");
@@ -93,11 +93,11 @@ public class WorldSave {
         }
         Bukkit.getServer().unloadWorld(w, true);
         final File path = w.getWorldFolder();
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PVPPlugin.getPlugin(), new Runnable() {
                 @Override
                 public void run() {   
-                    copyWorld(new File(Main.getPlugin().getDataFolder() + System.getProperty("file.separator") + name), path);
-                    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
+                    copyWorld(new File(PVPPlugin.getPlugin().getDataFolder() + System.getProperty("file.separator") + name), path);
+                    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PVPPlugin.getPlugin(), new Runnable() {
                         @Override
                         public void run() {   
                             Bukkit.getServer().getWorlds().add(Bukkit.getServer().createWorld(new WorldCreator(wname)));

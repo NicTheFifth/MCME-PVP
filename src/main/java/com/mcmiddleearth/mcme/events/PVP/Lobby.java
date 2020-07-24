@@ -18,7 +18,7 @@
  */
 package com.mcmiddleearth.mcme.events.PVP;
 
-import com.mcmiddleearth.mcme.events.PVP.maps.Map;
+import com.mcmiddleearth.mcme.events.maps.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;

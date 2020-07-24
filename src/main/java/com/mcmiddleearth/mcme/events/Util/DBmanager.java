@@ -19,8 +19,8 @@
 package com.mcmiddleearth.mcme.events.Util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mcmiddleearth.mcme.events.Main;
-
+import com.mcmiddleearth.mcme.events.PVPPlugin;
+import lombok.Getter;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -31,15 +31,15 @@ import java.util.HashMap;
  */
 public class DBmanager {
     
-    private static ObjectMapper JSonParser = new ObjectMapper();
+    @Getter private static ObjectMapper JSonParser = new ObjectMapper();
     
     public static boolean saveObj(Object obj, File loc, String name){
         if(!loc.exists()){
             loc.mkdirs();
         }
         boolean success = true;
-        File locStart = new File(loc + Main.getFileSep() + name + ".new");
-        File locEnd = new File(loc + Main.getFileSep() + name);
+        File locStart = new File(loc + PVPPlugin.getFileSep() + name + ".new");
+        File locEnd = new File(loc + PVPPlugin.getFileSep() + name);
         try {
            JSonParser.writeValue(locStart, obj);
         } catch (IOException ex) {
@@ -71,7 +71,7 @@ public class DBmanager {
     }
     
     public static Object loadObj(Class type, String path){
-        File loc = new File(Main.getPluginDirectory() + Main.getFileSep() + path);
+        File loc = new File(PVPPlugin.getPluginDirectory() + PVPPlugin.getFileSep() + path);
         if(!loc.exists()){
             loc.mkdirs();
             return false;
@@ -96,9 +96,5 @@ public class DBmanager {
             rtn.put(f.getName(), loadObj(Type, f));
         }
         return rtn;
-    }
-
-    public static ObjectMapper getJSonParser() {
-        return JSonParser;
     }
 }
