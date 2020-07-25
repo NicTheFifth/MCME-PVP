@@ -43,6 +43,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.mozilla.javascript.commonjs.module.Require;
+import sun.tools.jstat.Literal;
 
 import java.io.File;
 import java.util.*;
@@ -122,10 +123,6 @@ public class PVPCommand extends CommandDispatcher<Player>{
                     return 1;} )).executes(c -> {
                         doCommand("stats", c.getSource());
                         return 1;}))
-            .then(LiteralArgumentBuilder.<Player>literal("removegame")
-                .then(RequiredArgumentBuilder.<Player, String>argument("map", new com.mcmiddleearth.mcme.pvp.command.CommandMapArgument()).executes(c -> {
-                    doCommand("deleteMap", c.getArgument("map", String.class), c.getSource());
-                    return 1;} )))
             .then(LiteralArgumentBuilder.<Player>literal("togglevoxel")
                 .then(RequiredArgumentBuilder.<Player, String> argument("bool", new com.mcmiddleearth.mcme.pvp.command.CommandStringArgument("true", "false"))).executes(c -> {
                 doCommand("toggleVoxel", c.getArgument("bool", String.class), c.getSource());
@@ -174,7 +171,39 @@ public class PVPCommand extends CommandDispatcher<Player>{
                     .then(RequiredArgumentBuilder.<Player, String>argument("rp", new CommandStringArgument("eriador", "rohan", "lothlorien", "gondor", "moria", "mordor")).executes(c -> {
                             doCommand("mapEditorRp", c.getArgument("map", String.class), c.getArgument("rp", String.class), c.getSource());
                             return 1;
-                        }))))
+                        })))
+                 .then(LiteralArgumentBuilder.<Player>literal("setarea").executes( c -> {
+                     doCommand("setArea", c.getArgument("map", String.class), c.getSource());
+                     return 1;
+                 }))
+                .then(LiteralArgumentBuilder.<Player>literal("delete").executes( c -> {
+                    doCommand("deleteMap", c.getArgument("map", String.class), c.getSource());
+                    return 1;
+                }))
+                .then(LiteralArgumentBuilder.<Player>literal("spawn")
+                    .then(RequiredArgumentBuilder.<Player, String>argument( "spawn", new CommandStringVariableArgument())
+                        .then(LiteralArgumentBuilder.<Player>literal("delete").executes(c ->{
+                            doCommand("deleteSpawn", c.getArgument("map", String.class),c.getArgument("spawn", String.class), c.getSource());
+                            return 1;
+                        }))
+                        .then(LiteralArgumentBuilder.<Player>literal("create").executes( c -> {
+                            doCommand("createSpawn", c.getArgument("map", String.class), c.getArgument("spawn", String.class), c.getSource());
+                            return 1;
+                        }))
+                        .then(LiteralArgumentBuilder.<Player>literal("setloc").executes( c -> {
+                            doCommand("setSpawnLoc", c.getArgument("map", String.class), c.getArgument("spawn", String.class), c.getSource());
+                            return 1;
+                        }))
+                    )
+                        .then(LiteralArgumentBuilder.<Player>literal("show").executes( c -> {
+                            doCommand("spawnShow", c.getArgument("map", String.class), c.getSource());
+                            return 1;
+                        })))
+                .then(LiteralArgumentBuilder.<Player>literal("listspawns").executes( c -> {
+                    doCommand("listSpawns", c.getArgument("map", String.class), c.getSource());
+                    return 1;
+                }))
+            )
         );
     }
 
@@ -183,9 +212,6 @@ public class PVPCommand extends CommandDispatcher<Player>{
             case "mapList":
                 for(String m: mapNames)
                     source.sendMessage(ChatColor.GREEN + maps.get(m).getName() + ChatColor.WHITE + " | " + ChatColor.BLUE + maps.get(m).getTitle());
-                break;
-            case "setArea":
-                Logger.getLogger("logger").log(Level.INFO, "setArea command received");
                 break;
             case "startGame":
                 if(nextGame == null){
@@ -353,7 +379,6 @@ public class PVPCommand extends CommandDispatcher<Player>{
         }
     }
     private void doCommand(String action, String argument, Player source) {
-        Logger.getLogger("logger");
         switch(action){
             case "createMap":
                 MapEditor.MapCreator(argument, source);
@@ -449,14 +474,18 @@ public class PVPCommand extends CommandDispatcher<Player>{
                 f.delete();
                 source.sendMessage(ChatColor.RED + "Deleted " + argument);
                 break;
+            case "spawnShow":
+                break;
+            case "listSpawns":
+                MapEditor.sendSpawnMessage(argument, source);
+                break;
+            case "setArea":
+                MapEditor.MapAreaSet(argument, source);
+                break;
         }
     }
     private void doCommand(String action, String argument1, String argument2, Player source) {
-        Logger.getLogger("logger");
         switch(action) {
-            case "mapPointCreate":
-                Logger.getLogger("logger").log(Level.INFO, "mapPointCreate received with " + argument1 + " and " + argument2);
-                break;
             case "createVarTest":
                 Map m = Map.maps.get(argument1);
                 if(m.getGm().requiresParameter().equals("none"))
@@ -508,6 +537,15 @@ public class PVPCommand extends CommandDispatcher<Player>{
                 break;
             case "mapEditorRp":
                 MapEditor.MapRPSet(argument1,argument2,source);
+                break;
+            case "deleteSpawn":
+                MapEditor.PointDelete(argument1, argument2, source);
+                break;
+            case "createSpawn":
+                MapEditor.PointCreate(argument1, argument2, source);
+                break;
+            case "setSpawnLoc":
+                MapEditor.PointLocEdit(argument1, argument2, source);
                 break;
         }
     }

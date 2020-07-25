@@ -42,7 +42,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
-
+import lombok.Getter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,7 +56,8 @@ import java.util.Random;
 public class OneInTheQuiver extends com.mcmiddleearth.mcme.pvp.Gamemode.BasePluginGamemode {
     
     private boolean pvpRegistered = false;
-    
+
+    @Getter
     private final ArrayList<String> NeededPoints = new ArrayList<String>(Arrays.asList(new String[] {
         "PlayerSpawn"
     }));
@@ -436,11 +437,6 @@ public class OneInTheQuiver extends com.mcmiddleearth.mcme.pvp.Gamemode.BasePlug
                 healing.put(e.getPlayer(), new Long(System.currentTimeMillis() + 7500));
             }
         }
-    }
-
-    @Override
-    public ArrayList<String> getNeededPoints() {
-        return NeededPoints;
     }
 
     @Override

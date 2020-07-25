@@ -13,6 +13,9 @@ This project is once again in development!
 * /pvp assign <player> <team> to assign a player to a certain team in a running game
 * /pvp warp <map name>
 * Permission system for commands
+* Include pipe
+* create spawnShow
+* fix autoqueue when games end
 
 ### Code improvements
 * Simplify the command files so they're easier to read
