@@ -19,12 +19,15 @@
 package com.mcmiddleearth.mcme.pvp.maps;
 
 import com.mcmiddleearth.mcme.pvp.PVPPlugin;
+import com.mcmiddleearth.mcme.pvp.Util.EventLocation;
 import com.mcmiddleearth.mcme.pvp.command.PVPCommand;
 import com.mcmiddleearth.pluginutil.message.FancyMessage;
 import com.mcmiddleearth.pluginutil.message.MessageType;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import java.util.HashMap;
 
 /**
  *
@@ -111,6 +114,27 @@ public class MapEditor{
         message.addFancy("Map rp: " + m.getResourcePackURL() + "\n",
                 "/mapeditor "+(map)+" rp ",
                 "Click to edit. Don't change the leading '/mapEditor <map> rp'.");
+        message.addFancy("Map spawns: " + m.getImportantPoints().size() + "\n",
+                "/mapeditor "+(map)+" listSpawns ",
+                "Click to view spawns. Don't change the leading '/mapEditor <map> listSpawns'.");
+        message.send(p);
+    }
+
+    public static void sendSpawnMessage(String map, Player p){
+        FancyMessage message = new FancyMessage(MessageType.INFO, PVPPlugin.getMessageUtil());
+        Map m = Map.maps.get(map);
+        String coordinate;
+        HashMap<String, EventLocation> spawns = m.getImportantPoints();
+        if(spawns.size() == 0){
+        for(String i : spawns.keySet()){
+            message.addFancy("i " + spawns.get(i).getX() + " " + spawns.get(i).getY() + " " + spawns.get(i).getZ(),
+                    "/mapeditor " + (map) + " spawn " + (i),
+                    "Click to edit spawn, don't change the leading /mapEditor <map> spawn <point>");
+        }} else {
+            message.addFancy("Contains no spawns, click to add spawn.",
+                    "/mapeditor " + (map) + " spawn create <name>",
+                    "Click to create a spawn, don't change the leading /mapeditor <map> spawn create");
+        }
         message.send(p);
     }
 }
