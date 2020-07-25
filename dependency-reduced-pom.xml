@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.mcmiddleearth</groupId>
-  <artifactId>MCME-Events</artifactId>
-  <name>MCME-Events</name>
+  <artifactId>MCME-PVP</artifactId>
+  <name>MCME-PVP</name>
   <version>1.0.2</version>
   <build>
     <resources>
@@ -161,16 +161,24 @@
       <scope>system</scope>
       <systemPath>D:\SystemRepository\VentureChat-2.18.6.jar</systemPath>
     </dependency>
+    <dependency>
+      <groupId>com.mcmiddleearth</groupId>
+      <artifactId>PluginUtils</artifactId>
+      <version>1.3.1</version>
+      <scope>system</scope>
+      <systemPath>D:\MCME Java\MC test server\plugins\PluginUtils-1.3.1.jar</systemPath>
+      <exclusions>
+        <exclusion>
+          <artifactId>bukkit</artifactId>
+          <groupId>org.bukkit</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>fawe-api</artifactId>
+          <groupId>com.boydti</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
   </dependencies>
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <version>1.18.0</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
   <properties>
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>

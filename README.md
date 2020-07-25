@@ -1,23 +1,28 @@
-MCME-Events
+MCME-PVP
 ===========
 
-[![Build Status](https://travis-ci.org/DonoA/MCME-Events.svg)](https://travis-ci.org/DonoA/MCME-Events)
-
-## Winter and Summer events for MCME
+## PVP for MCME
 This project is once again in development!
 
 ### Bug fixes
 * Team Conquest - apparently it's bugged, but I don't know what specifically
 
-### New features
+### To be implemented
 * /pvp help - guide for setting up maps and starting games
 * Keep track of sessions for players so they can be reassigned to the same team on rejoin
 * /pvp assign <player> <team> to assign a player to a certain team in a running game
 * /pvp warp <map name>
+* Permission system for commands
 
 ### Code improvements
 * Simplify the command files so they're easier to read
 * Tests? This might be a bit ambitious
+
+### New Features
+* UI for map creation and editing
+* Brigadier command parser
+* An actual queue for PVP
+* An updated permission system
 
 Needed commands for wrapper:
 

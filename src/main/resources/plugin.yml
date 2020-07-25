@@ -1,8 +1,8 @@
 name: ${project.artifactId}
-main: com.mcmiddleearth.mcme.events.PVPPlugin
+main: com.mcmiddleearth.mcme.pvp.PVPPlugin
 version: ${project.version}
 authors: [DonoA, aaldim, lizzehface, meggawatts, Eriol_Eandur, NicoviçTheSixth]
-depend: [WorldEdit,PlaceholderAPI]
+depend: [WorldEdit,PlaceholderAPI, PluginUtils]
 api-version: 1.15
 
 commands:
@@ -33,6 +33,9 @@ commands:
   t:
     description: Send a message to players on your team
     usage: /t <message>
+  mapeditor:
+    description: A map editor GUI to help you edit maps more easily
+    usage: /mapeditor <map> <variable> <edit>
 permissions:
   pvp.join:
     description: Can join even when server is locked.

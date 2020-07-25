@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MCME-Events.iml" filepath="$PROJECT_DIR$/MCME-Events.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MCME-Events (1).iml" filepath="$PROJECT_DIR$/MCME-Events (1).iml" />
+      <module fileurl="file://$PROJECT_DIR$/MCME-PVP.iml" filepath="$PROJECT_DIR$/MCME-PVP.iml" />
     </modules>
   </component>
 </project>
