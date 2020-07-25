@@ -75,11 +75,11 @@ public class PVPCommand extends CommandDispatcher<Player>{
                 .then(LiteralArgumentBuilder.<Player>literal("list").executes(c -> {
                     doCommand("mapList", c.getSource());
                     return 1;} ))
-                .then(RequiredArgumentBuilder.<Player, String>argument("name", new CommandNewMapArgument()).executes(c ->{
+                .then(RequiredArgumentBuilder.<Player, String>argument("name", new CommandNewMapArgument()).requires( c -> c.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())).executes(c ->{
                     doCommand("createMap", c.getArgument("name", String.class), c.getSource());
                     return 1; })))
             .then(LiteralArgumentBuilder.<Player>literal("game")
-                .then(LiteralArgumentBuilder.<Player>literal("quickstart")
+                .then(LiteralArgumentBuilder.<Player>literal("quickstart").requires( c -> c.hasPermission(Permissions.RUN.getPermissionNode()))
                     .then(RequiredArgumentBuilder.<Player, String>argument( "map", new CommandMapArgument()).executes(c -> {
                         doCommand("createGame", c.getArgument("map", String.class), c.getSource());
                         return 1;} )
@@ -92,10 +92,10 @@ public class PVPCommand extends CommandDispatcher<Player>{
                         .then(LiteralArgumentBuilder.<Player>literal("test").executes(c -> {
                             doCommand("createTest", c.getArgument("map", String.class), c.getSource());
                             return 1;} ))))
-                .then(LiteralArgumentBuilder.<Player>literal("start").executes(c -> {
+                .then(LiteralArgumentBuilder.<Player>literal("start").requires( c -> c.hasPermission(Permissions.RUN.getPermissionNode())).executes(c -> {
                     doCommand("startGame", c.getSource());
                     return 1;} ))
-                .then(LiteralArgumentBuilder.<Player>literal("end").executes(c -> {
+                .then(LiteralArgumentBuilder.<Player>literal("end").requires( c -> c.hasPermission(Permissions.RUN.getPermissionNode())).executes(c -> {
                     doCommand("endGame", c.getSource());
                     return 1;} ))
                 .then(LiteralArgumentBuilder.<Player>literal("getgames").executes(c -> {
@@ -104,7 +104,7 @@ public class PVPCommand extends CommandDispatcher<Player>{
             .then(LiteralArgumentBuilder.<Player>literal("join").executes(c -> {
                 doCommand("join", c.getSource());
                 return 1;} ))
-            .then(LiteralArgumentBuilder.<Player>literal("kick")
+            .then(LiteralArgumentBuilder.<Player>literal("kick").requires( c -> c.hasPermission(Permissions.KICK.getPermissionNode()))
                 .then(RequiredArgumentBuilder.<Player, String>argument("player", new com.mcmiddleearth.mcme.pvp.command.CommandPlayerArgument(PVPPlugin.getServer())).executes(c -> {
                     doCommand("kickPlayer", c.getArgument("player", String.class), c.getSource());
                     return 1;} )))
@@ -118,25 +118,25 @@ public class PVPCommand extends CommandDispatcher<Player>{
             .then(LiteralArgumentBuilder.<Player>literal("stats").executes(c -> {
                 doCommand("stats", c.getSource());
                 return 1;} )
-                .then(LiteralArgumentBuilder.<Player>literal("clear").executes(c -> {
+                .then(LiteralArgumentBuilder.<Player>literal("clear").requires( c -> c.hasPermission(Permissions.PVP_ADMIN.getPermissionNode())).executes(c -> {
                     doCommand("statsClear", c.getSource());
                     return 1;} )).executes(c -> {
                         doCommand("stats", c.getSource());
                         return 1;}))
-            .then(LiteralArgumentBuilder.<Player>literal("togglevoxel")
+            .then(LiteralArgumentBuilder.<Player>literal("togglevoxel").requires( c -> c.hasPermission(Permissions.PVP_ADMIN.getPermissionNode()))
                 .then(RequiredArgumentBuilder.<Player, String> argument("bool", new com.mcmiddleearth.mcme.pvp.command.CommandStringArgument("true", "false"))).executes(c -> {
                 doCommand("toggleVoxel", c.getArgument("bool", String.class), c.getSource());
                 return 1;} ))
             .then(LiteralArgumentBuilder.<Player>literal("lobby").executes(c -> {
                 doCommand("lobby", c.getSource());
                 return 1;} ))
-            .then(LiteralArgumentBuilder.<Player>literal("broadcast").executes(c->{
+            .then(LiteralArgumentBuilder.<Player>literal("broadcast").requires( c -> c.hasPermission(Permissions.RUN.getPermissionNode())).executes(c->{
                 doCommand("broadcast", c.getSource());
                 return 1;
             }))
         );
 
-        register(LiteralArgumentBuilder.<Player>literal("locker").requires(s -> s.getPlayer().hasPermission( "CREATE"))
+        register(LiteralArgumentBuilder.<Player>literal("locker").requires( c -> c.hasPermission(Permissions.RUN.getPermissionNode()))
             .then(LiteralArgumentBuilder.<Player>literal("lock").executes( c -> {
                 doCommand("toggleLock", c.getSource());
                 return 1; }))
@@ -145,7 +145,7 @@ public class PVPCommand extends CommandDispatcher<Player>{
                 return 1; }))
         );
 
-        register(LiteralArgumentBuilder.<Player>literal("mapeditor")
+        register(LiteralArgumentBuilder.<Player>literal("mapeditor").requires( c -> c.hasPermission(Permissions.PVP_ADMIN.getPermissionNode()))
             .then(RequiredArgumentBuilder.<Player, String>argument("map", new CommandMapArgument())
                 .then(LiteralArgumentBuilder.<Player>literal("name")
                     .then(RequiredArgumentBuilder.<Player, String>argument("name", new CommandNewMapArgument()).executes(c -> {
@@ -193,12 +193,16 @@ public class PVPCommand extends CommandDispatcher<Player>{
                         .then(LiteralArgumentBuilder.<Player>literal("setloc").executes( c -> {
                             doCommand("setSpawnLoc", c.getArgument("map", String.class), c.getArgument("spawn", String.class), c.getSource());
                             return 1;
-                        }))
-                    )
-                        .then(LiteralArgumentBuilder.<Player>literal("show").executes( c -> {
-                            doCommand("spawnShow", c.getArgument("map", String.class), c.getSource());
-                            return 1;
                         })))
+                    .then(LiteralArgumentBuilder.<Player>literal("show").executes( c -> {
+                        doCommand("spawnShow", c.getArgument("map", String.class), c.getSource());
+                        return 1;
+                    }))
+                    .then(LiteralArgumentBuilder.<Player>literal("hide").executes( c -> {
+                        doCommand("spawnHide", c.getArgument("map", String.class), c.getSource());
+                        return 1;
+                    }))
+                )
                 .then(LiteralArgumentBuilder.<Player>literal("listspawns").executes( c -> {
                     doCommand("listSpawns", c.getArgument("map", String.class), c.getSource());
                     return 1;
@@ -226,6 +230,7 @@ public class PVPCommand extends CommandDispatcher<Player>{
                 else{
                     source.sendMessage(ChatColor.RED + "Can't start! There's already a game running!");
                 }
+                MapEditor.HideSpawns(source);
                 break;
             case "endGame":
                 if(nextGame != null){
@@ -475,6 +480,11 @@ public class PVPCommand extends CommandDispatcher<Player>{
                 source.sendMessage(ChatColor.RED + "Deleted " + argument);
                 break;
             case "spawnShow":
+                MapEditor.HideSpawns(source);
+                MapEditor.ShowSpawns(argument, source);
+                break;
+            case "spawnHide":
+                MapEditor.HideSpawns(source);
                 break;
             case "listSpawns":
                 MapEditor.sendSpawnMessage(argument, source);

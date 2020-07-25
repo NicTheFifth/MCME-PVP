@@ -33,7 +33,9 @@ import com.sk89q.worldedit.regions.Region;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -151,6 +153,30 @@ public class MapEditor{
         sendSpawnMessage(map, p);
     }
 
+    public static void ShowSpawns(String map, Player p){
+        Map m = Map.maps.get(map);
+        EventLocation loc;
+        for(String name : m.getImportantPoints().keySet()){
+            loc = m.getImportantPoints().get(name);
+            ArmorStand marker = (ArmorStand) loc.toBukkitLoc().getWorld().spawnEntity(loc.toBukkitLoc().add(0, 1, 0), EntityType.ARMOR_STAND);
+            marker.setGravity(false);
+            marker.setCustomName(name);
+            marker.setCustomNameVisible(true);
+            marker.setGlowing(true);
+            marker.setMarker(true);
+        }
+    }
+
+    public static void HideSpawns(Player p){
+        ArmorStand toDelete;
+        for(Entity marker : PVPPlugin.getSpawn().getWorld().getEntities())
+            if(marker.getType() == EntityType.ARMOR_STAND){
+                toDelete = (ArmorStand) marker;
+                if(toDelete.isMarker())
+                    toDelete.remove();
+            }
+    }
+
     public static void sendMapMessage (String map, Map m, Player p){
         FancyMessage message = new FancyMessage(MessageType.INFO, PVPPlugin.getMessageUtil());
         message.addFancy("Map name: " + m.getName() + "\n",
@@ -168,11 +194,11 @@ public class MapEditor{
         message.addFancy("Map rp: " + m.getResourcePackURL() + "\n",
                 "/mapeditor "+(map)+" rp ",
                 "Click to edit. Don't change the leading '/mapEditor <map> rp'.");
-        message.addFancy("Map area set: " + m.getRegionPoints().isEmpty() + "\n",
+        message.addFancy("Map area set: " + !m.getRegionPoints().isEmpty() + "\n",
                 "/mapeditor "+(map)+" setarea",
                 "Click to edit. Don't change the command.");
         message.addFancy("Map spawns: " + m.getImportantPoints().size() + "\n",
-                "/mapeditor "+(map)+" listSpawns",
+                "/mapeditor "+(map)+" listspawns",
                 "Click to view spawns. Don't change the leading '/mapEditor <map> listspawns'.\n");
         if(m.getGm() != null)
             message.addSimple("Map has all spawns: " + m.getImportantPoints().keySet().containsAll(m.getGm().getNeededPoints()) + "\n");

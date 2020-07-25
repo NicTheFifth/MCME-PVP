@@ -32,7 +32,8 @@ import org.bukkit.*;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
-
+import lombok.Getter;
+import lombok.Setter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class Map {
     
     @JsonIgnore
     private Region region;
-    
+
     private String resourcePackURL;
 
     public static HashMap<String, Map> maps = new HashMap<>();

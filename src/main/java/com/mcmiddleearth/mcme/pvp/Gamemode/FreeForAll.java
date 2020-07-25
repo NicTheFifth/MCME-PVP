@@ -25,6 +25,7 @@ import com.mcmiddleearth.mcme.pvp.Handlers.GearHandler;
 import com.mcmiddleearth.mcme.pvp.Handlers.GearHandler.SpecialGear;
 import com.mcmiddleearth.mcme.pvp.PVP.PlayerStat;
 import com.mcmiddleearth.mcme.pvp.PVP.Team;
+import com.mcmiddleearth.mcme.pvp.command.PVPCommand;
 import com.mcmiddleearth.mcme.pvp.maps.Map;
 import com.mcmiddleearth.mcme.pvp.Util.EventLocation;
 import org.bukkit.Bukkit;
@@ -384,6 +385,7 @@ public class FreeForAll extends com.mcmiddleearth.mcme.pvp.Gamemode.BasePluginGa
         mostDeaths.clear();
         mostKills.clear();
         highestKd.clear();
+        PVPCommand.queueNextGame();
         super.End(m);
     }
     

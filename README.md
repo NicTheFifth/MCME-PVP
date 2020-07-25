@@ -14,15 +14,13 @@ This project is once again in development!
 * /pvp warp <map name>
 * Permission system for commands
 * Include pipe
-* create spawnShow
-* fix autoqueue when games end
 
 ### Code improvements
 * Simplify the command files so they're easier to read
 * Tests? This might be a bit ambitious
 
 ### New Features
-* UI for map creation and editing
+* UI for map creation and editing (with showing spawns)
 * Brigadier command parser
 * An actual queue for PVP
 * An updated permission system

@@ -206,7 +206,7 @@ public class TeamConquest extends com.mcmiddleearth.mcme.pvp.Gamemode.BasePlugin
         getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
         
         m.playerLeaveAll();
-        
+        PVPCommand.queueNextGame();
         super.End(m);
 
     }
